@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MetaDataReader extends DataReader {
     private long metaDataOffset;
@@ -34,7 +33,7 @@ public class MetaDataReader extends DataReader {
         return null;
     }
     public MetaData createMetaData() throws IOException {
-        return new MetaData(getNumberOfObjects(), getGroups(), getChannels());
+        return new MetaData(getNumberOfObjects());//, getGroups(), getChannels());
     }
     public int getLengthOfObject() throws IOException{
         return readInt32(lengthOfFirstObjectOffset);
@@ -54,22 +53,3 @@ class TDMSGroup extends TDMSObject {
 class TDMSChannel extends TDMSObject {}
 
 //MetaData by mela vracet pocet objektu, groupy, channely,
-class MetaData extends TDMSObject{
-    private int numberOfObjects;
-    private List<TDMSGroup> groups;
-    private List<TDMSChannel> channels;
-
-    public int getNumberOfObjects() { return numberOfObjects; }
-    public List<TDMSGroup> getGroups() {return groups;}
-    public List<TDMSChannel> getChannels(){return channels;}
-    public MetaData(int numberOfObjects, List<TDMSGroup> groups, List<TDMSChannel> channels){
-        this.numberOfObjects = numberOfObjects;
-        this.groups = groups;
-        this.channels = channels;
-    }
-
-}
-class Property<tdsDataType>{
-    private String name;
-
-}
