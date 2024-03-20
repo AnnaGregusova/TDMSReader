@@ -10,26 +10,21 @@ public class DataReader {
     private RandomAccessFile file;
     FileChannel channel;
     public int readInt32(int offset) throws IOException {
-        /*byte [] bytes = new byte[Integer.BYTES];
-
-        channel = file.getChannel();
-        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
-        channel.position(offset);
-        channel.read(buffer);
-        buffer.flip();
-        buffer.get(bytes);
-        ByteBuffer wrapped = ByteBuffer.wrap(bytes);
-        wrapped.order(java.nio.ByteOrder.LITTLE_ENDIAN);
-        return wrapped.getInt();*/
-
         file.seek(offset);
-        return file.readInt();
+
+        byte[] bytes = new byte[Integer.BYTES];
+        file.read(bytes);
+
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        return buffer.getInt();
 
     }
 
     public long readInt64(int offset) throws IOException {
 
-        byte[] bytes = new byte[Long.BYTES];
+        /*byte[] bytes = new byte[Long.BYTES];
 
         channel = file.getChannel();
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
@@ -40,7 +35,17 @@ public class DataReader {
         buffer.get(bytes);
         ByteBuffer wrapped = ByteBuffer.wrap(bytes);
         wrapped.order(java.nio.ByteOrder.LITTLE_ENDIAN);
-        return wrapped.getLong(); // Read long from the wrapped buffer
+        return wrapped.getLong(); // Read long from the wrapped buffer*/
+
+        file.seek(offset);
+
+        byte[] bytes = new byte[Long.BYTES];
+        file.read(bytes);
+
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        return buffer.getLong();
     }
 
     public char readChar(int offset) throws IOException {
@@ -64,6 +69,7 @@ public class DataReader {
         channel.read(buffer);
         buffer.flip();
         return new String(buffer.array());
+
     }
 
     public byte[] readBytes(int offset, int length) throws IOException {
