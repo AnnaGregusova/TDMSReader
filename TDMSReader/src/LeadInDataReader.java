@@ -3,7 +3,7 @@ import java.io.RandomAccessFile;
 import java.util.Objects;
 
 public class LeadInDataReader extends DataReader {
-    private long currentSegmentOffset;
+    private long currentSegmentOffset; // nevim jak prijdu na tohle
     private final String expectedTag = "TDSm";
     private final int tagOffset = 0;
     private final int maskOffset = 4;
@@ -19,7 +19,7 @@ public class LeadInDataReader extends DataReader {
     }
 
     public boolean isValidTag() throws IOException {
-        return Objects.equals(getTag(), expectedTag);
+        return getTag().equals(expectedTag);
     }
     public String getTag() throws IOException{
         return readString(tagOffset, 4);
@@ -41,30 +41,4 @@ public class LeadInDataReader extends DataReader {
     public LeadInData createLeadInData() throws IOException {
         return new LeadInData(getTag(), getMask(), getVersion(), getNextSegment(), getRawData());
     }
-
-}
-class LeadInData{
-
-    private String tag;
-    private int mask;
-    private int version;
-    private long segmentOffset;
-    private long rawDataOffset;
-
-    public LeadInData(String tag, int mask, int version, long segmentOffset, long rawDataOffset){
-
-        this.tag = tag;
-        this.mask = mask;
-        this.version = version;
-        this.segmentOffset = segmentOffset;
-        this.rawDataOffset = rawDataOffset;
-    }
-
-    public String getTag() { return tag; }
-    public int getMask() { return mask; }
-    public int getVersion() { return version; }
-    public long getSegmentOffset() { return segmentOffset; }
-    public long getRawDataOffset() { return rawDataOffset; }
-
-
 }
