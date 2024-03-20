@@ -11,12 +11,10 @@ public class Main {
         String path5 = "/Users/annagregusova/java/TDMS_library/TDMS_files/sent_test_20200826_135215_0001.tdms";
         String path6 = "/Users/annagregusova/java/TDMS_library/TDMS_files/NH3_concentration_1a_0002.tdms";
 
-        String filePath = path2;
-
         try {
-            TDMSFile.read(filePath);
-            TDMSFile.printLeadInData();
-            TDMSFile.printMetaData();
+            TDMSFile tdmsFile = TDMSFile.read(path6);
+            tdmsFile.printLeadInData();
+            tdmsFile.printMetaData();
             //TDMSGroup.getGroup();
 
 
