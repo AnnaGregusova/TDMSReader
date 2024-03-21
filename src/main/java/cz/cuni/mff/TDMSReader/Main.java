@@ -10,9 +10,9 @@ public class Main {
         String path4 = "/Users/annagregusova/java/TDMS_library/TDMS_files/Test_OK_Sample_20210916_125133 (1).tdms";
         String path5 = "/Users/annagregusova/java/TDMS_library/TDMS_files/sent_test_20200826_135215_0001.tdms";
         String path6 = "/Users/annagregusova/java/TDMS_library/TDMS_files/NH3_concentration_1a_0002.tdms";
-
+	String path7 = "example.tdms";
         try {
-            TDMSFile tdmsFile = TDMSFile.read(path6);
+            TDMSFile tdmsFile = TDMSFile.read(path7);
             tdmsFile.printLeadInData();
             tdmsFile.printMetaData();
             //TDMSGroup.getGroup();
