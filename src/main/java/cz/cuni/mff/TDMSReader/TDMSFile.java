@@ -5,6 +5,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 public class TDMSFile {
+
     private static RandomAccessFile file;
     private static ArrayList<TDMSSegment> segments = new ArrayList<TDMSSegment>();
     private static ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
@@ -49,7 +50,9 @@ public class TDMSFile {
             if (segment != null) {
                 segments.add(segment);
                 readSegments(segmentOffset, fileSize);
+                
             }
+            
         }
     }
 
@@ -62,6 +65,7 @@ public class TDMSFile {
         if (leadInDataReader.isValidTag()) {
             LeadInData leadInData = leadInDataReader.createLeadInData();
             MetaData metaData = metaDataReader.createMetaData();
+            
             return new TDMSSegment(leadInData, metaData);
 
         } else {
@@ -70,7 +74,9 @@ public class TDMSFile {
         }
     }
     public TDMSGroup getGroup(String name){
+        
         for (TDMSSegment segment : segments){
+            //ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
             MetaData metaData = segment.getMetaData();
             groups = metaData.getGroups();
             for (int i = 0; i < segments.size(); i++){
@@ -86,7 +92,13 @@ public class TDMSFile {
         }
         return null;
     }
-
+    public ArrayList<TDMSGroup> getGroups(){
+        for (TDMSSegment segment : segments){
+            MetaData metaData = segment.getMetaData();
+            groups = metaData.getGroups();    
+        }  
+        return groups;     
+    }
 
     public void printMetaData() {
         for (TDMSSegment segment : segments) {

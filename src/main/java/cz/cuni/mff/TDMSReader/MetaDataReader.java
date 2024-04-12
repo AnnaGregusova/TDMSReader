@@ -6,8 +6,12 @@ import java.util.List;
 public class MetaDataReader extends DataReader {
     private long metaDataOffset;
     private final int numberOfObjectsOffset = 28;
-    private final int lengthOfFirstObjectOffset = 32;
-    private final int groupNameOffset = 36;
+    private int lengthOfObjectOffset = 32;
+    private int groupNameOffset = 36;
+    private boolean isGroup;
+    private int currentOffset = ;
+    private int lengthOfObjectpath = getLengthOfObject();
+    ArrayList<TDMSGroup> groups = new ArrayList<>();
 
     int numberOfPropertiesOffset = 0;
 
@@ -30,16 +34,23 @@ public class MetaDataReader extends DataReader {
         return readInt32(numberOfObjectsOffset);
     }
     public ArrayList<TDMSGroup> getGroups() throws IOException{
-        int lengthOfObject = getLengthOfObject();
+        
+        
         int numberOfObjects = getNumberOfObjects();
 
-        System.out.println("Length of object: " + lengthOfObject);
+        System.out.println("Length of object: " + lengthOfObjectpath);
         System.out.println("Number of objects: " + numberOfObjects);
-        ArrayList<TDMSGroup> groups = new ArrayList<>();
-        if (lengthOfObject != 0 && numberOfObjects != 0){
-            String name = readString(groupNameOffset, lengthOfObject);
+        
+        if (lengthOfObjectpath != 0 && numberOfObjects != 0){
+            String name = readString(groupNameOffset, lengthOfObjectpath);
             ArrayList<Property> properties = getProperties();
             groups.add(new TDMSGroup(name, properties));
+        }
+            
+        if (!isGroup){
+            groupNameOffset = currentOffset;
+
+            getGroups();
         }
         return groups;
     }
@@ -51,18 +62,19 @@ public class MetaDataReader extends DataReader {
     }
 
     public int getLengthOfObject() throws IOException{
-        return readInt32(lengthOfFirstObjectOffset);
+        return readInt32(lengthOfObjectOffset);
     }
     public int getNumberOfProperties() throws IOException{
         numberOfPropertiesOffset = getLengthOfObject() + groupNameOffset + 4;
         return readInt32(numberOfPropertiesOffset);
     }
+    @SuppressWarnings("unchecked")
     public ArrayList<Property> getProperties() throws IOException {
 
         ArrayList properties = new ArrayList<Property>();
         int numberOfProperties = getNumberOfProperties();
         System.out.println("Number of properties: " + numberOfProperties);
-        int currentOffset = numberOfPropertiesOffset + 4;
+        currentOffset = numberOfPropertiesOffset + 4;
         for (int i = 0; i < numberOfProperties; i++){
 
             int lengthOfPropertyName = readInt32(currentOffset);
@@ -91,7 +103,19 @@ public class MetaDataReader extends DataReader {
             }
             properties.add(new Property(propertyName, propertyValue));
         }
+        System.out.println(currentOffset);
+        readBytes(currentOffset, 20);
+        lengthOfObjectpath = readInt32(currentOffset);
+        isGroup = isGroup(currentOffset);
+
+        int pathLength = readInt32(currentOffset);
+        System.out.println("Path length: " + pathLength);
         return properties;
+    }
+    private boolean isGroup(int currentOffset){
+
+        //check if the next object is Group or channel
+        return false;
     }
 }
 class TDMSGroup{
