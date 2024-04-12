@@ -32,6 +32,7 @@ public class LeadInDataReader extends DataReader {
         return readInt32(versionOffset);
     }
     public int getMask() throws IOException {
+
         return readInt32(maskOffset);
     }
 

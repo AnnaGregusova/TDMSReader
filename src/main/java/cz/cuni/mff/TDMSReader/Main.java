@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -10,11 +12,20 @@ public class Main {
         String path4 = "/Users/annagregusova/java/TDMS_library/TDMS_files/Test_OK_Sample_20210916_125133 (1).tdms";
         String path5 = "/Users/annagregusova/java/TDMS_library/TDMS_files/sent_test_20200826_135215_0001.tdms";
         String path6 = "/Users/annagregusova/java/TDMS_library/TDMS_files/NH3_concentration_1a_0002.tdms";
-	String path7 = "example.tdms";
+        String path7 = "example.tdms";
+
         try {
-            TDMSFile tdmsFile = TDMSFile.read(path7);
+            TDMSFile tdmsFile = TDMSFile.read(path6);
             tdmsFile.printLeadInData();
             tdmsFile.printMetaData();
+            TDMSGroup tdmsGroup = tdmsFile.getGroup("/");
+            //TDMSGroup tdmsGroup = tdmsFile.getGroup("");
+            ArrayList<Property> properties = tdmsGroup.getProperties();
+            properties.toString();
+            System.out.println(tdmsGroup);
+
+
+
             //TDMSGroup.getGroup();
 
 
@@ -22,7 +33,5 @@ public class Main {
             System.err.println("An error occurred while reading the TDMS file: " + e.getMessage());
             e.printStackTrace();
         }
-
-
     }
 }
