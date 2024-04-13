@@ -50,9 +50,9 @@ public class TDMSFile {
             if (segment != null) {
                 segments.add(segment);
                 readSegments(segmentOffset, fileSize);
-                
+
             }
-            
+
         }
     }
 
@@ -60,12 +60,12 @@ public class TDMSFile {
         LeadInDataReader leadInDataReader = new LeadInDataReader(file, segmentOffset);
         int leadInDataByteCount = 28;
         MetaDataReader metaDataReader = new MetaDataReader(file, segmentOffset + leadInDataByteCount);
-       // leadInDataReader.readBytes(0, 200);
+        // leadInDataReader.readBytes(0, 200);
 
         if (leadInDataReader.isValidTag()) {
             LeadInData leadInData = leadInDataReader.createLeadInData();
             MetaData metaData = metaDataReader.createMetaData();
-            
+
             return new TDMSSegment(leadInData, metaData);
 
         } else {
@@ -74,8 +74,8 @@ public class TDMSFile {
         }
     }
     public TDMSGroup getGroup(String name){
-        
-        for (TDMSSegment segment : segments){
+
+        for (TDMSSegment segment : segments){ //var
             //ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
             MetaData metaData = segment.getMetaData();
             groups = metaData.getGroups();
@@ -95,9 +95,9 @@ public class TDMSFile {
     public ArrayList<TDMSGroup> getGroups(){
         for (TDMSSegment segment : segments){
             MetaData metaData = segment.getMetaData();
-            groups = metaData.getGroups();    
-        }  
-        return groups;     
+            groups = metaData.getGroups();
+        }
+        return groups;
     }
 
     public void printMetaData() {

@@ -5,12 +5,15 @@ import java.util.List;
 
 public class MetaDataReader extends DataReader {
     private long metaDataOffset;
-    private final int numberOfObjectsOffset = 28;
+    private int numberOfObjectsOffset = 28;
     private int lengthOfObjectOffset = 32;
     private int groupNameOffset = 36;
+    int numberOfObjects = 0;
+    private boolean isFirstCallToGetGroups = true;
+    //private int numberOfObjects;
     private boolean isGroup;
-    private int currentOffset = ;
-    private int lengthOfObjectpath = getLengthOfObject();
+    private int currentOffset = 28;
+    //private int lengthOfObjectpath = getLengthOfObject();
     ArrayList<TDMSGroup> groups = new ArrayList<>();
 
     int numberOfPropertiesOffset = 0;
@@ -22,6 +25,7 @@ public class MetaDataReader extends DataReader {
 
     }
     public boolean hasObjects() throws IOException {
+
         if (getNumberOfObjects() == 0){
             return false;
         }
@@ -31,50 +35,76 @@ public class MetaDataReader extends DataReader {
         return readString(groupNameOffset, getLengthOfObject()/2);
     }
     public int getNumberOfObjects() throws IOException {
-        return readInt32(numberOfObjectsOffset);
+        System.out.println("Current ofset1: " + currentOffset);
+        int numberOfObjects = readInt32(currentOffset); //zacinam na 28
+        currentOffset += 4; //jsem na 32 a jde na delku
+        System.out.println("Current ofset2: " + currentOffset);
+        return numberOfObjects;
     }
-    public ArrayList<TDMSGroup> getGroups() throws IOException{
-        
-        
-        int numberOfObjects = getNumberOfObjects();
 
-        System.out.println("Length of object: " + lengthOfObjectpath);
-        System.out.println("Number of objects: " + numberOfObjects);
-        
-        if (lengthOfObjectpath != 0 && numberOfObjects != 0){
-            String name = readString(groupNameOffset, lengthOfObjectpath);
+    public ArrayList<TDMSGroup> getGroups() throws IOException{
+
+        if (isFirstCallToGetGroups) {
+            numberOfObjects = getNumberOfObjects(); // This line runs only on the first call
+            System.out.println("Number of objects: " + numberOfObjects);
+            isFirstCallToGetGroups = false; // Set flag to false after first call
+        }
+
+        int lengthOfObjectPath = getLengthOfObject();
+        System.out.println("Length of object: " + lengthOfObjectPath);
+
+
+        if (lengthOfObjectPath != 0 && numberOfObjects != 0){
+            System.out.println("jsem tady");
+            String name = readString(currentOffset, lengthOfObjectPath);
+            System.out.println(name);
+            currentOffset += lengthOfObjectPath + 4; // tady nevim jestli tu 4 mam pricist
             ArrayList<Property> properties = getProperties();
             groups.add(new TDMSGroup(name, properties));
         }
-            
-        if (!isGroup){
-            groupNameOffset = currentOffset;
 
+        if (isGroup){
+            System.out.println("Next object is group");
+            groupNameOffset = currentOffset;
             getGroups();
+        }
+        else{
+            System.out.println("Next object is channel");
+            getChannels();
         }
         return groups;
     }
     public List<TDMSChannel> getChannels() throws IOException{
+
         return null;
     }
     public MetaData createMetaData() throws IOException {
-        return new MetaData(getNumberOfObjects(), getGroups());//, getGroups(), getChannels());
+        return new MetaData(getGroups());//, getGroups(), getChannels());
     }
 
     public int getLengthOfObject() throws IOException{
-        return readInt32(lengthOfObjectOffset);
+        System.out.println("Current ofset: " + currentOffset);
+        int lengthOfObjectPath = readInt32(currentOffset); //jsem na 32
+        currentOffset += 4; //jsem na 36 a jdu na jmeno
+        System.out.println("Current ofset: " + currentOffset);
+        return  lengthOfObjectPath;
     }
     public int getNumberOfProperties() throws IOException{
-        numberOfPropertiesOffset = getLengthOfObject() + groupNameOffset + 4;
-        return readInt32(numberOfPropertiesOffset);
+        System.out.println("number of propereties offset: " + currentOffset );
+        int numberOfProperties =  readInt32(currentOffset); // jsem na 36 + delka jmena groupy
+
+
+        currentOffset += 4;
+        return numberOfProperties;
+
     }
-    @SuppressWarnings("unchecked")
+
     public ArrayList<Property> getProperties() throws IOException {
 
         ArrayList properties = new ArrayList<Property>();
         int numberOfProperties = getNumberOfProperties();
         System.out.println("Number of properties: " + numberOfProperties);
-        currentOffset = numberOfPropertiesOffset + 4;
+
         for (int i = 0; i < numberOfProperties; i++){
 
             int lengthOfPropertyName = readInt32(currentOffset);
@@ -104,19 +134,27 @@ public class MetaDataReader extends DataReader {
             properties.add(new Property(propertyName, propertyValue));
         }
         System.out.println(currentOffset);
-        readBytes(currentOffset, 20);
-        lengthOfObjectpath = readInt32(currentOffset);
+        //readBytes(currentOffset, 20);
         isGroup = isGroup(currentOffset);
 
         int pathLength = readInt32(currentOffset);
-        System.out.println("Path length: " + pathLength);
+        //System.out.println("Path length: " + pathLength);
         return properties;
     }
-    private boolean isGroup(int currentOffset){
-
+    private boolean isGroup(int currentOffset) throws IOException {
+        System.out.println("Checking second object");
+        System.out.println("----------------------");
         //check if the next object is Group or channel
-        return false;
+        int nextObjectPathLength = readInt32(currentOffset);
+        String nextObjectName = readString(currentOffset + 4, nextObjectPathLength);
+        System.out.println(nextObjectPathLength);
+        System.out.println(nextObjectName);
+        int slashCount = nextObjectName.length() - nextObjectName.replace("/", "").length();
+        return slashCount < 2; // If there are fewer than 2 slashes, it's a group
     }
+    //public ArrayList<TDMSChannel> getChannels(){
+
+
 }
 class TDMSGroup{
     private ArrayList<Property> properties;
@@ -136,4 +174,18 @@ class TDMSGroup{
     }
 }
 
-class TDMSChannel{}
+class TDMSChannel{
+    private ArrayList<Property> properties;
+    private String name;
+
+    public TDMSChannel(String name, ArrayList properties){
+        this.name = name;
+        this.properties = properties;
+    }
+
+    public String getName() {return name;}
+    public ArrayList<Property> getProperties(){
+
+        return properties;
+    }
+}
