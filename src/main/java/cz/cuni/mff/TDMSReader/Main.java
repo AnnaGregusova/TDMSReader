@@ -18,7 +18,7 @@ public class Main {
             TDMSFile tdmsFile = TDMSFile.read(path6);
             //tdmsFile.printLeadInData();
             //tdmsFile.printMetaData();
-            TDMSGroup tdmsGroup = tdmsFile.getGroup("/'AI channels'");
+            TDMSGroup tdmsGroup = tdmsFile.getGroup("/");
             ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
             ArrayList<Property> properties = tdmsGroup.getProperties();
             properties.toString();
