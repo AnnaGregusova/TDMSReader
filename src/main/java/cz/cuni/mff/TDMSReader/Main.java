@@ -15,18 +15,24 @@ public class Main {
         String path7 = "example.tdms";
 
         try {
-            TDMSFile tdmsFile = TDMSFile.read(path7);
-            //tdmsFile.getProperties();
-            //tdmsFile.printLeadInData();
-            //tdmsFile.printMetaData();
-            //TDMSGroup tdmsGroup = tdmsFile.getGroup("/");
-            ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
-            //ArrayList<Property> properties = tdmsGroup.getProperties();
-            //properties.toString();
-            System.out.println(groups);
-            //System.out.println(tdmsGroup);
-            //TDMSGroup.getGroup();
+            TDMSFile tdmsFile = TDMSFile.read(path4);
+            System.out.println("TDMs File: " + tdmsFile);
 
+            ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
+            for (TDMSGroup group : groups) {
+                System.out.println("Group Name: " + group.getName());
+                ArrayList<TDMSChannel> channels = group.getChannels();
+                for (TDMSChannel channel : channels) {
+                    System.out.println("Channel Name: " + channel.getName());
+                }
+            }
+            TDMSGroup tdmsGroup = tdmsFile.getGroup("/'SENT channels'");
+            ArrayList<Property> groupProperties = tdmsGroup.getProperties();
+            System.out.println("Printing group properties: ");
+            System.out.println(groupProperties);
+            TDMSChannel tdmsChannel = tdmsGroup.getChannel("/'SENT channels'/'Test_OK_Sample_invPressureMSN'");
+            System.out.println("Printing channel properties");
+            System.out.println(tdmsChannel.getProperties());
 
         } catch (IOException e) {
             System.err.println("An error occurred while reading the TDMS file: " + e.getMessage());

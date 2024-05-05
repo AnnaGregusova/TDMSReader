@@ -278,7 +278,7 @@ public class MetaDataReader extends DataReader {
 class TDMSGroup{
     private ArrayList<Property> properties;
     private String name;
-    private List<TDMSChannel> channels;
+    private ArrayList<TDMSChannel> channels;
 
     public TDMSGroup(String name, ArrayList<Property> properties, ArrayList<TDMSChannel> channels){
         this.name = name;
@@ -291,7 +291,27 @@ class TDMSGroup{
 
         return properties;
     }
-}
+    public ArrayList<TDMSChannel> getChannels() {
+        // Return the list of channels
+        return this.channels;
+    }
+
+    public TDMSChannel getChannel(String name) {
+
+        for (TDMSChannel channel : channels){ //var
+            //ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();;
+            for (int i = 0; i < channels.size(); i++){
+                    if ( channel.getName().equals(name)){
+                        System.out.println(channel.getName());
+                        System.out.println(channel.getProperties());
+                        return channel;
+                    }
+                }
+            }
+        return null;
+        }
+    }
+
 
 class TDMSChannel{
     //private ArrayList<RawData> rawData;
