@@ -5,21 +5,15 @@ import java.util.List;
 
 public class MetaDataReader extends DataReader {
     private long metaDataOffset;
-    private int numberOfObjectsOffset = 28;
-    private int lengthOfObjectOffset = 32;
+    private final int numberOfObjectsOffset = 28;
+    private final int lengthOfObjectOffset = 32;
     private int groupNameOffset = 36;
     int numberOfObjects = 0;
-    int currentNumberOfObjects = 1;
     private boolean isFirstCallToGetGroups = true;
-    //private int numberOfObjects;
-    private boolean isGroup;
     private int currentOffset = 28;
-    //private int lengthOfObjectpath = getLengthOfObject();
     ArrayList<TDMSGroup> groups = new ArrayList<>();
-
-
+    ArrayList<Property> tdmsFileInfo = new ArrayList<>();
     int numberOfPropertiesOffset = 0;
-
 
     public MetaDataReader(RandomAccessFile file, long metaDataOffset) throws IOException {
         super(file);
@@ -37,10 +31,8 @@ public class MetaDataReader extends DataReader {
         return readString(groupNameOffset, getLengthOfObject()/2);
     }
     public int getNumberOfObjects() throws IOException {
-        //System.out.println("Current ofset1: " + currentOffset);
         int numberOfObjects = readInt32(currentOffset); //zacinam na 28
         currentOffset += 4; //jsem na 32 a jde na delku
-        //System.out.println("Current ofset2: " + currentOffset);
         return numberOfObjects;
     }
 
@@ -54,67 +46,32 @@ public class MetaDataReader extends DataReader {
             System.out.println("Number of objects: " + numberOfObjects);
             isFirstCallToGetGroups = false; // Set flag to false after first call
         }
-
-        System.out.println("Current number of Objects: " + numberOfObjects);
         numberOfObjects --;
 
         for (int i = 0; i < numberOfObjects -1; i++){
 
             int lengthOfObjectPath = getLengthOfObject();
-            //System.out.println("Length of object: " + lengthOfObjectPath);
             String name = readString(currentOffset, lengthOfObjectPath);
             currentOffset += lengthOfObjectPath;
-            System.out.println("Group name: " + name);
+            //System.out.println("Group name: " + name);
             int hasRawData = readInt32(currentOffset);
             if (hasRawData != -1){
                 return null;
             }
-            System.out.println("Has Raw data " + hasRawData);
+            //System.out.println("Has Raw data " + hasRawData);
             currentOffset += 4;
-
 
            properties = getProperties();
            processObjects(channels);
 
+           if (name. equals("/")){
 
-
-
-           /*if (isGroup(currentOffset) && numberOfObjects != 0){
-               getGroups();
+                TDMSGroup tdmsFileGroup = new TDMSGroup(name, properties, channels);
+                tdmsFileInfo = tdmsFileGroup.getProperties();
            }
-           if (!isGroup(currentOffset) && numberOfObjects != 0){
-               TDMSChannel tdmsChannel = getChannel();
-               channels.add(tdmsChannel);
+           else{
+               groups.add(new TDMSGroup(name, properties, channels));
            }
-           if (numberOfObjects != 0){
-               if (isGroup(currentOffset) && numberOfObjects != 0){
-                   getGroups();
-               }
-               if (!isGroup(currentOffset) && numberOfObjects != 0){
-                   TDMSChannel tdmsChannel = getChannel();
-                   channels.add(tdmsChannel);
-               }
-               if (numberOfObjects != 0){
-                   if (isGroup(currentOffset) && numberOfObjects != 0){
-                       getGroups();
-                   }
-                   if (!isGroup(currentOffset) && numberOfObjects != 0){
-                       TDMSChannel tdmsChannel = getChannel();
-                       channels.add(tdmsChannel);
-                   }
-                   if (numberOfObjects != 0){
-                       if (isGroup(currentOffset) && numberOfObjects != 0){
-                           getGroups();
-                       }
-                       if (!isGroup(currentOffset) && numberOfObjects != 0){
-                           TDMSChannel tdmsChannel = getChannel();
-                           channels.add(tdmsChannel);
-                       }
-                   }
-               }
-           }*/
-
-            groups.add(new TDMSGroup(name, properties, channels));
         }
         return groups;
     }
@@ -131,34 +88,32 @@ public class MetaDataReader extends DataReader {
     }
 
     public MetaData createMetaData() throws IOException {
-        return new MetaData(getGroups());//, getGroups(), getChannels());
+        return new MetaData(getGroups(), getTdmsFileInfo());//, getGroups(), getChannels());
+    }
+
+    private ArrayList<Property> getTdmsFileInfo() {
+        return tdmsFileInfo;
     }
 
     public int getLengthOfObject() throws IOException{
-        //System.out.println("Current ofset: " + currentOffset);
         int lengthOfObjectPath = readInt32(currentOffset); //jsem na 32
         currentOffset += 4; //jsem na 36 a jdu na jmeno
-        //System.out.println("Current ofset: " + currentOffset);
         return  lengthOfObjectPath;
     }
     public int getNumberOfProperties() throws IOException{
-        //System.out.println("number of propereties offset: " + currentOffset);
+
         int numberOfProperties =  readInt32(currentOffset); // jsem na 36 + delka jmena groupy
-
-
         currentOffset += 4;
         return numberOfProperties;
 
     }
 
     public ArrayList<Property> getProperties() throws IOException {
-        //System.out.println("Getting properties");
+
         int numberOfProperties = getNumberOfProperties();
-
-
         ArrayList properties = new ArrayList<Property>();
 
-        System.out.println("Number of properties: " + numberOfProperties);
+        //System.out.println("Number of properties: " + numberOfProperties);
 
         for (int i = 0; i < numberOfProperties; i++){
 
@@ -168,11 +123,6 @@ public class MetaDataReader extends DataReader {
             currentOffset += lengthOfPropertyName;
             int propertyDataType =  readInt32(currentOffset);
             currentOffset += 4;
-
-
-           // System.out.println("length of Property name: " + lengthOfPropertyName);
-            System.out.println("Property name (property order): " + propertyName + " " + i);
-            System.out.println("Property Datatype: " + propertyDataType);
             Object propertyValue;
 
             switch (propertyDataType) {
@@ -181,60 +131,42 @@ public class MetaDataReader extends DataReader {
                     currentOffset += 4;
                     propertyValue = readString(currentOffset, lengthOfPropertyValue);
                     currentOffset += lengthOfPropertyValue;
-                    System.out.println("Property value: " + propertyValue);
+                    //System.out.println("Property value: " + propertyValue);
                     break;
                 case 10:
                     propertyValue = 10;
                     currentOffset += 8;
-                    System.out.println("Property value: " + propertyValue);
+                    //System.out.println("Property value: " + propertyValue);
                     break;
                 case 68:
                     propertyValue = 68;
                     currentOffset += 16;
-                    System.out.println("Property value: " + propertyValue);
+                    //System.out.println("Property value: " + propertyValue);
                     break;
                 case 12:
                     propertyValue = 12;
                     currentOffset += 12;
-                    System.out.println("Property value: " + propertyValue);
+                    //System.out.println("Property value: " + propertyValue);
                     break;
                 default:
                     propertyValue = readInt32(numberOfPropertiesOffset + 16 + lengthOfPropertyName);
                     currentOffset += 4;
-                    System.out.println("Property value: " + propertyValue);
+                    //System.out.println("Property value: " + propertyValue);
                     break;
             }
 
             properties.add(new Property(propertyName, propertyValue));
         }
 
-        /*if (numberOfObjects != 0 ){
-            isGroup = isGroup(currentOffset);
-        }
-        else{
-            isGroup= false;
-        }*/
-
         return properties;
     }
     private boolean isGroup(int currentOffset) throws IOException {
-        System.out.println("Checking next object");
-        //System.out.println("----------------------");
-        //System.out.println("Current number of Objects: " + numberOfObjects);
-        //check if the next object is Group or channel
         int nextObjectPathLength = readInt32(currentOffset);
-        //System.out.println(nextObjectPathLength);
         String nextObjectName = readString(currentOffset + 4, nextObjectPathLength);
-
-        //System.out.println(nextObjectName);
         int slashCount = nextObjectName.length() - nextObjectName.replace("/", "").length();
-        if (slashCount < 2) System.out.println("Next object is group");
-        if (slashCount >= 2) System.out.println("Next object is channel");
         return slashCount < 2; // If there are fewer than 2 slashes, it's a group
     }
-    //public ArrayList<TDMSChannel> getChannels(){
     public TDMSChannel getChannel() throws IOException{
-        System.out.println("Current number of Objects: " + numberOfObjects);
         numberOfObjects--;
         ArrayList<Property> properties;
         int nextObjectPathLength = readInt32(currentOffset);
@@ -251,13 +183,13 @@ public class MetaDataReader extends DataReader {
         currentOffset += 8;
 
         int numberOfProperties = readInt32(currentOffset);
-        System.out.println("CHANNEL NAME: " + channelName);
+        /*System.out.println("CHANNEL NAME: " + channelName);
         System.out.println("lengthOfIndexInformation: " + lengthOfIndexInformation);
         System.out.println("dataTypeOfRawData: " + dataTypeOfRawData);
         System.out.println("dimension: " + dimension);
         System.out.println("numberOfRawDataValues: " + numberOfRawDataValues);
         System.out.println("numberOfProperties: " + numberOfProperties);
-
+        */
         if(numberOfProperties != 0){
 
             properties = getProperties();
@@ -267,9 +199,6 @@ public class MetaDataReader extends DataReader {
             properties = null;
             currentOffset += 4;
         }
-
-        //System.out.println("nextObjectPathName: "+ nextObjectPathLength);
-
         TDMSChannel tdmsChannel = new TDMSChannel(channelName, properties);
         return  tdmsChannel;
     }
@@ -299,18 +228,23 @@ class TDMSGroup{
     public TDMSChannel getChannel(String name) {
 
         for (TDMSChannel channel : channels){ //var
-            //ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();;
             for (int i = 0; i < channels.size(); i++){
                     if ( channel.getName().equals(name)){
                         System.out.println(channel.getName());
-                        System.out.println(channel.getProperties());
+                        //System.out.println(channel.getProperties());
                         return channel;
                     }
                 }
             }
         return null;
         }
-    }
+        @Override
+        public String toString() {
+            return "TDMSGroup { " +
+                    "name= " + name + ' ' +
+                    '}';
+            }
+        }
 
 
 class TDMSChannel{
@@ -327,6 +261,25 @@ class TDMSChannel{
     public String getName() {return name;}
     public ArrayList<Property> getProperties() {return properties;}
 
+    public Object getPropertyValue(String name) {
+
+        for (Property property : properties){ //var
+            for (int i = 0; i < properties.size(); i++){
+                if ( property.getName().equals(name)){
+                    Object propertyValue = property.getPropertyValue();
+                    //System.out.println(channel.getProperties());
+                    return propertyValue;
+                }
+            }
+        }
+        return null;
+    }
+    @Override
+    public String toString() {
+        return "TDMSChannel { " +
+                "name= " + name + ' ' +
+                '}';
+    }
     /*public ArrayList<RawData> getRawData(){
 
         return rawData;

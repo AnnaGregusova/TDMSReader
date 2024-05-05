@@ -5,13 +5,14 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 public class TDMSFile {
-
     private static RandomAccessFile file;
     private static ArrayList<TDMSSegment> segments = new ArrayList<TDMSSegment>();
     private static ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
+
+    private static ArrayList<Property> tdmsFileInfo = new ArrayList<>();
+
     private TDMSFile(RandomAccessFile file) throws FileNotFoundException {
         this.file = file;
-
     }
 
     public static TDMSFile read(String filePath) throws IOException {
@@ -27,7 +28,8 @@ public class TDMSFile {
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             if (file != null) {
                 try {
                     file.close();
@@ -41,18 +43,16 @@ public class TDMSFile {
 
     private void readSegments(long segmentOffset, long fileSize) throws IOException {
         int leadInDataSizeInBytes = 28;
-        System.out.println("Segment offset: " + segmentOffset);
+        //System.out.println("Segment offset: " + segmentOffset);
         System.out.println("file size: " + fileSize);
-        System.out.println("Segment offset  + leadIndata: " + (segmentOffset + leadInDataSizeInBytes));
+        //System.out.println("Segment offset  + leadIndata: " + (segmentOffset + leadInDataSizeInBytes));
         if (segmentOffset + leadInDataSizeInBytes != fileSize) {
             TDMSSegment segment = readSegment(segmentOffset);
             segmentOffset += segment.getLeadInData().getSegmentOffset();
             if (segment != null) {
                 segments.add(segment);
                 readSegments(segmentOffset, fileSize);
-
             }
-
         }
     }
 
@@ -65,52 +65,39 @@ public class TDMSFile {
         if (leadInDataReader.isValidTag()) {
             LeadInData leadInData = leadInDataReader.createLeadInData();
             MetaData metaData = metaDataReader.createMetaData();
-
             return new TDMSSegment(leadInData, metaData);
 
-        } else {
+        }
+        else {
             System.out.println("Invalid TDMS file tag. The file might not be a valid TDMS file.");
             return null;
         }
     }
-    public static ArrayList<Property> getProperties(){
-        ArrayList<Property> properties = new ArrayList<Property>();
+    public ArrayList<Property> getProperties(){
+
         for (TDMSSegment segment : segments){ //var
             MetaData metaData = segment.getMetaData();
-            groups = metaData.getGroups();
-            for (int i = 0; i < segments.size(); i++){
-                for(int j = 0; j < groups.size(); j++){
-                    TDMSGroup group = groups.get(j);
-                    if ( group.getName().equals("/")){
-                        System.out.println(group.getName());
-                        properties = group.getProperties();
-                        System.out.println("File Properties: ");
-                        System.out.println(group.getProperties());
-
-                    }
-                }
+            tdmsFileInfo = metaData.getTdmsFileInfo();
             }
-        }
-        return null;
+        return tdmsFileInfo;
     }
     public TDMSGroup getGroup(String name){
 
         for (TDMSSegment segment : segments){ //var
-            //ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
-            MetaData metaData = segment.getMetaData();
-            groups = metaData.getGroups();
             for (int i = 0; i < segments.size(); i++){
                 for(int j = 0; j < groups.size(); j++){
                     TDMSGroup group = groups.get(j);
                     if ( group.getName().equals(name)){
-                        System.out.println(group.getName());
-                        System.out.println(group.getProperties());
                         return group;
                     }
                 }
             }
+
+
         }
         return null;
+
+
     }
     public ArrayList<TDMSGroup> getGroups(){
         for (TDMSSegment segment : segments){
