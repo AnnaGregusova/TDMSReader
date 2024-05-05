@@ -56,7 +56,7 @@ public class TDMSFile {
         }
     }
 
-    private static TDMSSegment readSegment(long segmentOffset) throws IOException {
+    private TDMSSegment readSegment(long segmentOffset) throws IOException {
         LeadInDataReader leadInDataReader = new LeadInDataReader(file, segmentOffset);
         int leadInDataByteCount = 28;
         MetaDataReader metaDataReader = new MetaDataReader(file, segmentOffset + leadInDataByteCount);
@@ -72,6 +72,26 @@ public class TDMSFile {
             System.out.println("Invalid TDMS file tag. The file might not be a valid TDMS file.");
             return null;
         }
+    }
+    public static ArrayList<Property> getProperties(){
+        ArrayList<Property> properties = new ArrayList<Property>();
+        for (TDMSSegment segment : segments){ //var
+            MetaData metaData = segment.getMetaData();
+            groups = metaData.getGroups();
+            for (int i = 0; i < segments.size(); i++){
+                for(int j = 0; j < groups.size(); j++){
+                    TDMSGroup group = groups.get(j);
+                    if ( group.getName().equals("/")){
+                        System.out.println(group.getName());
+                        properties = group.getProperties();
+                        System.out.println("File Properties: ");
+                        System.out.println(group.getProperties());
+
+                    }
+                }
+            }
+        }
+        return null;
     }
     public TDMSGroup getGroup(String name){
 

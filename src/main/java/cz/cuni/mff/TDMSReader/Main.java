@@ -15,18 +15,16 @@ public class Main {
         String path7 = "example.tdms";
 
         try {
-            TDMSFile tdmsFile = TDMSFile.read(path6);
+            TDMSFile tdmsFile = TDMSFile.read(path7);
+            //tdmsFile.getProperties();
             //tdmsFile.printLeadInData();
             //tdmsFile.printMetaData();
-            TDMSGroup tdmsGroup = tdmsFile.getGroup("/");
+            //TDMSGroup tdmsGroup = tdmsFile.getGroup("/");
             ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
-            ArrayList<Property> properties = tdmsGroup.getProperties();
-            properties.toString();
+            //ArrayList<Property> properties = tdmsGroup.getProperties();
+            //properties.toString();
             System.out.println(groups);
             //System.out.println(tdmsGroup);
-
-
-
             //TDMSGroup.getGroup();
 
 
