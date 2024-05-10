@@ -65,8 +65,12 @@ public class DataReader {
         for (byte b : bytes) {
             String hex = String.format("%02X", b);
             int decimal = b & 0xFF;
-            System.out.println("Hex: " + hex + ", Decimal: " + decimal);
+            //System.out.println("Hex: " + hex + ", Decimal: " + decimal);
+            System.out.print(hex);
+            
         }
+        System.out.println();
+        
 
         ArrayList<Byte> byteArrayList = new ArrayList<>();
 
