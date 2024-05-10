@@ -6,23 +6,22 @@ import java.util.ArrayList;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) throws IOException {
-        String path1 = "TDMSFiles\\Sample_2021_2496_20210916_123804 (1).tdms"; 
-        String path2 = "TDMSFiles\\coilResistanceTest_20210819_150423_0001 (1).tdms"; 
-        String path3 = "TDMSFiles\\Test_OK_Sample_20210916_125133 (3).tdms"; 
-        String path4 = "TDMSFiles\\sent_test_20200826_135215_0001 (1).tdms"; 
-        String path5 = "TDMSFiles\\NH3_concentration_1a_0002 (1).tdms";     
-        String path6 = "TDMSFiles\\test_TDMS_20240404_0001-0009_joined.tdms"; 
-        String path7 = "TDMSFiles\\E2300282-07_ED2404273_0_2024-03-27_093509.tdms ";
-        String path8 = "TDMSFiles\\test_TDMS_20240404_103108_0009.tdms"; 
-        String path9 = "TDMSFiles\\09_Point_T60C_V16000mV_20240315_102139.tdms"; 
-        String path10 = "TDMSFiles\\test_TDMS_20240404_093532_0001.tdms"; //9k
-        String path11 = "TDMSFiles\\test_TDMS_20240404_103108_0009.tdms"; //vice segmentu 13
+        String path1 = "src/tdms_files/Sample_2021_2496_20210916_123804.tdms";
+        String path2 = "src/tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
+        String path3 = "src/tdms_files/Test_OK_Sample_20210916_125133 (1).tdms";
+        String path4 = "src/tdms_files/sent_test_20200826_135215_0001.tdms";
+        String path5 = "src/tdms_files/NH3_concentration_1a_0002.tdms";
+        //String path6 = "TDMSFiles\\test_TDMS_20240404_0001-0009_joined.tdms";
+        String path7 = "src/tdms_files/E2300282-07_ED2404273_0_2024-03-27_093509.tdms";
+        String path8 = "src/tdms_files/test_TDMS_20240404_103108_0009.tdms";  //vice segmentu 13
+        String path9 = "src/tdms_files/09_Point_T60C_V16000mV_20240315_102139.tdms";
+        String path10 = "src/tdms_files/test_TDMS_20240404_093532_0001.tdms"; //9k
         String path12 = "example.tdms"; 
     
         try {
             //readPath1(path1);
-            //readPath2(path2);
-            readPath3(path3);
+            readPath2(path2);
+            //readPath3(path3);
             //readPath4(path4);
             //readPath5(path5);
             //readPath6(path6); //joined files
