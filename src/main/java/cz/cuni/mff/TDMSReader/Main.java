@@ -1,3 +1,4 @@
+//package src.main.java.cuni.cz.mff.TDMSReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,7 +7,7 @@ import java.util.ArrayList;
 // then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) throws IOException {
-        String path1 = "src/tdms_files/Sample_2021_2496_20210916_123804.tdms";
+        String path1 = "tdms_files/Sample_2021_2496_20210916_123804.tdms";
         String path2 = "src/tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
         String path3 = "src/tdms_files/Test_OK_Sample_20210916_125133 (1).tdms";
         String path4 = "src/tdms_files/sent_test_20200826_135215_0001.tdms";
