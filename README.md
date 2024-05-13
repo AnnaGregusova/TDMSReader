@@ -72,8 +72,9 @@ Returns the name of the channel.
 tdmsChannel.getProperties();
 ```
 Returns an ArrayList of properties associated with the channel.
+
 ```ruby
-tdmsChannel.getPropertyValue();
+tdmsChannel.getPropertyValue("Property_name");
 ```
 Returns the value of a specified property of the channel.
 ```ruby
