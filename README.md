@@ -18,28 +18,61 @@ This Java library is designed for reading and processing of data stored in Techn
 ## Usage
 
 ### **1. Initializing TDMS File:**
-
-TDMSFile tdmsFile = TDMSFile.read(path); - Reads the TDMS file from the specified path and initializes a TDMSFile object.
+```ruby
+TDMSFile tdmsFile = TDMSFile.read(path);
+```
+Reads the TDMS file from the specified path and initializes a TDMSFile object.
 
 ### **2. Working with File Properties:**
-
-tdmsFile.getProperties(); - Retrieves a list of properties associated with the TDMS file.
+```ruby
+tdmsFile.getProperties();
+```
+Retrieves a list of properties associated with the TDMS file.
 
 ### **3. Accessing Groups:**
-
-ArrayList<TDMSGroup> groups = tdmsFile.getGroups(); - Returns an ArrayList of TDMSGroup objects representing all groups in the file.
-TDMSGroup tdmsGroup = tdmsFile.getGroup("Group_name"); - Retrieves a specific group by name.
+```ruby
+ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
+```
+Returns an ArrayList of TDMSGroup objects representing all groups in the file.
+```ruby
+TDMSGroup tdmsGroup = tdmsFile.getGroup("Group_name");
+```
+Retrieves a specific group by name.
 
 ### **4. Group Details and Channels:**
+```ruby
+tdmsGroup.getName();
+```
+Returns the name of the group.
 
-tdmsGroup.getName(); - Returns the name of the group.
-tdmsGroup.getProperties(); - Fetches a list of properties associated with the group.
-tdmsGroup.getChannels(); - Returns an ArrayList containing all channels within the group.
-TDMSChannel tdmsChannel = tdmsGroup.getChannel("Channel_name"); - Obtains a specific channel by name from the group.
+```ruby
+tdmsGroup.getProperties();
+```
+Fetches a list of properties associated with the group.
+```ruby
+tdmsGroup.getChannels();
+```
+Returns an ArrayList containing all channels within the group.
+```
+```ruby
+TDMSChannel tdmsChannel = tdmsGroup.getChannel("Channel_name");
+```
+Obtains a specific channel by name from the group.
 
 ### **5. Channel Information and Data:**
-
-tdmsChannel.getName(); - Provides the name of the channel.
-tdmsChannel.getProperties(); - Returns a list of properties associated with the channel.
-tdmsChannel.getPropertyValue(); - Gets the value of a specified property of the channel.
-tdmsChannel.getRawData(); - Retrieves raw data from the channel.
+```ruby
+tdmsChannel.getName();
+```
+Provides the name of the channel.
+```ruby
+tdmsChannel.getProperties();
+```
+Returns a list of properties associated with the channel.
+```ruby
+tdmsChannel.getPropertyValue();
+```
+Gets the value of a specified property of the channel.
+```ruby
+tdmsChannel.getRawData();
+```
+Retrieves raw data from the channel.
