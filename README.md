@@ -17,7 +17,7 @@ This Java library is designed for reading and processing of data stored in Techn
    ```
 ## Usage
 
-**1. Initializing TDMS File:**
+### **1. Initializing TDMS File:**
 
 TDMSFile tdmsFile = TDMSFile.read(path); - Reads the TDMS file from the specified path and initializes a TDMSFile object.
 
