@@ -27,17 +27,17 @@ Reads the TDMS file from the specified path and initializes a TDMSFile object.
 ```ruby
 tdmsFile.getProperties();
 ```
-Retrieves a list of properties associated with the TDMS file.
+Returns ArrayList of TDMSProperty objects(properties) associated with the TDMS file.
 
 ### **3. Accessing Groups:**
 ```ruby
 ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
 ```
-Returns an ArrayList of TDMSGroup objects representing all groups in the file.
+Returns an ArrayList of TDMSGroup objects of all groups in the file.
 ```ruby
 TDMSGroup tdmsGroup = tdmsFile.getGroup("Group_name");
 ```
-Retrieves a specific group by name.
+Returns a specific TDMSgroup by name.
 
 ### **4. Group Details and Channels:**
 ```ruby
@@ -48,11 +48,11 @@ Returns the name of the group.
 ```ruby
 tdmsGroup.getProperties();
 ```
-Fetches a list of properties associated with the group.
+Returns an ArrayList of properties associated with the group.
 ```ruby
 tdmsGroup.getChannels();
 ```
-Returns an ArrayList containing all channels within the group.
+Returns an ArrayList containing all TDMSchannels within the group.
 
 ```ruby
 TDMSChannel tdmsChannel = tdmsGroup.getChannel("Channel_name");
@@ -63,16 +63,36 @@ Obtains a specific channel by name from the group.
 ```ruby
 tdmsChannel.getName();
 ```
-Provides the name of the channel.
+Returns the name of the channel.
 ```ruby
 tdmsChannel.getProperties();
 ```
-Returns a list of properties associated with the channel.
+Returns an ArrayList of properties associated with the channel.
 ```ruby
 tdmsChannel.getPropertyValue();
 ```
-Gets the value of a specified property of the channel.
+Returns the value of a specified property of the channel.
 ```ruby
 tdmsChannel.getRawData();
 ```
-Retrieves raw data from the channel.
+Returns all raw data from the channel.
+```ruby
+tdmsChannel.getRawData(10);
+```
+Specify how many Raw data you want to get.
+
+### 6. Iterating Over Groups and Channels:
+
+```ruby
+for (TDMSGroup group : groups) {
+    ArrayList<TDMSChannel> channels = group.getChannels();
+    for (TDMSChannel channel : channels) {
+        ArrayList<Object> rawData = channel.getRawData(1);
+        System.out.println(channel.getName());
+        System.out.println(channel.getProperties());
+        System.out.println(rawData);
+    }
+}
+```
+This is how you can iterate through all groups and their channels, accessing names, properties and raw data of each channel:
+
