@@ -1,7 +1,7 @@
 # TDMSReader
 This Java library is designed for reading and processing of data stored in Technical Data Management Streaming (TDMS) format. It offers a  solution for applications requiring access to structured binary data. The library parses TDMS files, recognizing and managing its structure comprised of groups and channels, each representing different data segments and types.
 
-##TDMS Format
+## TDMS Format
 TDMS files organize data in three main types: Lead-In, Metadata, and Raw Data. The Lead-In part provides an overview of how the file is organized, making it easier to navigate through the data. Metadata offers detailed information about the data stored, like descriptions and settings, which helps understand what the data represents. Finally, Raw Data is the actual data collected, and it is only stored in the Channels, which are part of Groups within the TDMS file. You can find detailed information here https://www.ni.com/en/support/documentation/supplemental/06/the-ni-tdms-file-format.html.
 
 
