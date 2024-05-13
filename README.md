@@ -53,7 +53,7 @@ Fetches a list of properties associated with the group.
 tdmsGroup.getChannels();
 ```
 Returns an ArrayList containing all channels within the group.
-```
+
 ```ruby
 TDMSChannel tdmsChannel = tdmsGroup.getChannel("Channel_name");
 ```
