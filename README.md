@@ -3,7 +3,7 @@ This Java library is designed for reading and processing of data stored in Techn
 # Getting started
 ** Instalation **
 1. Clone the repo
-   ```
+   ```ruby
       git clone https://github.com/AnnaGregusova/TDMSReader
       cd TDMSReader/src/main/java/cz/cuni/mff/TDMSReader
    ```
