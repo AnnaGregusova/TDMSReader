@@ -3,5 +3,15 @@ This Java library is designed for reading and processing of data stored in Techn
 # Getting started
 ** Instalation **
 1. Clone the repo
-   <img width="468" alt="image" src="https://github.com/AnnaGregusova/TDMSReader/assets/112817401/aefe541d-72fb-49d4-beed-e90786ec8e82">
-3. 
+   ```
+      git clone https://github.com/AnnaGregusova/TDMSReader
+      cd TDMSReader/src/main/java/cz/cuni/mff/TDMSReader
+   ```
+2. Compile
+   ```
+      javac Main.java
+   ```
+3. Run it
+   ```
+      java Main
+   ```
