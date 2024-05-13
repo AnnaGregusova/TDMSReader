@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) throws IOException {
         String path1 = "tdms_files/Sample_2021_2496_20210916_123804.tdms";
-        String path2 = "src/tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
-        String path3 = "src/tdms_files/Test_OK_Sample_20210916_125133 (1).tdms";
-        String path4 = "src/tdms_files/sent_test_20200826_135215_0001.tdms";
+        String path2 = "tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
+        String path3 = "tdms_files/Test_OK_Sample_20210916_125133 (1).tdms";
+        String path4 = "tdms_files/sent_test_20200826_135215_0001.tdms";
         String path5 = "src/tdms_files/NH3_concentration_1a_0002.tdms";
         //String path6 = "TDMSFiles\\test_TDMS_20240404_0001-0009_joined.tdms";
         String path7 = "src/tdms_files/E2300282-07_ED2404273_0_2024-03-27_093509.tdms";
@@ -62,7 +62,7 @@ public class Main {
         System.out.println("Printing group properties: ");
         System.out.println(groupProperties);
 
-        TDMSChannel tdmsChannel = tdmsGroup.getChannel("/hjbjkbjk");
+        TDMSChannel tdmsChannel = tdmsGroup.getChannel("Wrong_Channel_name");
         System.out.println("Channel name: " + tdmsChannel.getName());
         System.out.println("Printing channel properties");
         System.out.println(tdmsChannel.getProperties());
