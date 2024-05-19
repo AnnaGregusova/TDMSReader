@@ -1,3 +1,4 @@
+package cz.cuni.mff.TDMSReader;
 /**
  * Class representing lead-in data with tag, mask, version, segment offset, and raw data offset.
  */

@@ -1,3 +1,4 @@
+package cz.cuni.mff.TDMSReader;
 /**
  * Represents a property within a TDMS (Technical Data Management Streaming) file.
  */

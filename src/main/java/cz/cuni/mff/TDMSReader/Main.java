@@ -1,3 +1,4 @@
+package cz.cuni.mff.TDMSReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -27,7 +28,7 @@ public class Main {
             }
             try {
                 switch (input) {
-                    case "path1":
+		    case "path1":
                         readPath1();
                         break;
                     case "path2":
