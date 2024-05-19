@@ -12,7 +12,7 @@ TDMS files organize data in three main types: Lead-In, Metadata, and Raw Data. T
       cd TDMSReader/src/main/java/cz/cuni/mff/TDMSReader
    ```
 2. Compile
-   ```ruby
+   ```java
       javac Main.java
    ```
 3. Run it
