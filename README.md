@@ -16,79 +16,79 @@ TDMS files organize data in three main types: Lead-In, Metadata, and Raw Data. T
       javac Main.java
    ```
 3. Run it
-   ```ruby
+   ```java
       java Main
    ```
 ## Usage
 
 ### **1. Initializing TDMS File:**
-```ruby
+```java
 TDMSFile tdmsFile = TDMSFile.read(path);
 ```
 Reads the TDMS file from the specified path and initializes a TDMSFile object.
 
 ### **2. Working with File Properties:**
-```ruby
+```java
 tdmsFile.getProperties();
 ```
 Returns ArrayList of TDMSProperty objects(properties) associated with the TDMS file.
 
 ### **3. Accessing Groups:**
-```ruby
+```java
 ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
 ```
 Returns an ArrayList of TDMSGroup objects of all groups in the file.
-```ruby
+```java
 TDMSGroup tdmsGroup = tdmsFile.getGroup("Group_name");
 ```
 Returns a specific TDMSgroup by name.
 
 ### **4. Group Details and Channels:**
-```ruby
+```java
 tdmsGroup.getName();
 ```
 Returns the name of the group.
 
-```ruby
+```java
 tdmsGroup.getProperties();
 ```
 Returns an ArrayList of properties associated with the group.
-```ruby
+```java
 tdmsGroup.getChannels();
 ```
 Returns an ArrayList containing all TDMSchannels within the group.
 
-```ruby
+```java
 TDMSChannel tdmsChannel = tdmsGroup.getChannel("Channel_name");
 ```
 Obtains a specific channel by name from the group.
 
 ### **5. Channel Information and Data:**
-```ruby
+```java
 tdmsChannel.getName();
 ```
 Returns the name of the channel.
-```ruby
+```java
 tdmsChannel.getProperties();
 ```
 Returns an ArrayList of properties associated with the channel.
 
-```ruby
+```java
 tdmsChannel.getPropertyValue("Property_name");
 ```
 Returns the value of a specified property of the channel.
-```ruby
+```java
 tdmsChannel.getRawData();
 ```
 Returns all raw data from the channel.
-```ruby
+```java
 tdmsChannel.getRawData(10);
 ```
 Specify how many Raw data you want to get.
 
 ### 6. Iterating Over Groups and Channels:
 
-```ruby
+```java
 for (TDMSGroup group : groups) {
     ArrayList<TDMSChannel> channels = group.getChannels();
     for (TDMSChannel channel : channels) {
