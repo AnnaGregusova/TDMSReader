@@ -7,7 +7,7 @@ TDMS files organize data in three main types: Lead-In, Metadata, and Raw Data. T
 # Getting started
 ## Instalation
 1. Clone the repo
-   ```ruby
+   ```java
       git clone https://github.com/AnnaGregusova/TDMSReader
       cd TDMSReader/src/main/java/cz/cuni/mff/TDMSReader
    ```
