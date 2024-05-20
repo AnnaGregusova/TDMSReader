@@ -5,19 +5,20 @@ This Java library is designed for reading and processing of data stored in Techn
 TDMS files organize data in three main types: Lead-In, Metadata, and Raw Data. The Lead-In data part provides an overview of how the file is organized (Tag, Mask, Version...). Metadata describe detailed information about the data stored, such as number of objects (groups, channels), it also contains properties of both group and channels and much more. Finally, Raw Data is the actual data collected, and it is only stored in the Channels, which are part of Groups within the TDMS file. You can find detailed information about the structure here: https://www.ni.com/en/support/documentation/supplemental/06/the-ni-tdms-file-format.html.
 
 # Getting started
-## Instalation
+
+## Installation
 1. Clone the repo
    ```java
       git clone https://github.com/AnnaGregusova/TDMSReader
-      cd TDMSReader/src/main/java/cz/cuni/mff/TDMSReader
+      cd TDMSReader
    ```
-2. Compile
+2. Run Maven install
    ```java
-      javac Main.java
+      mvn clean install
    ```
-3. Run it
+3. Execute the program
    ```java
-      java Main
+      mvn exec:java
    ```
 ## Usage
 
