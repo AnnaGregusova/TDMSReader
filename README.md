@@ -16,7 +16,7 @@ TDMS files organize data in three main types: Lead-In, Metadata, and Raw Data. T
    ```java
       mvn clean install
    ```
-3.Execute the program
+3. Execute the program
    ```java
       mvn exec:java
    ```
