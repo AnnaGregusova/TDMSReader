@@ -1,3 +1,7 @@
+package cz.cuni.mff.TDMSReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,18 +11,21 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
-
 public class TDMSReaderTests {
     private RandomAccessFile raFile;
     private LeadInDataReader leadInDataReader;
-     ExpectedLeadInData.LeadInDataExpectations leadInDataExpectations;
-    String path1 = "/Users/annagregusova/java/TDMS_library/TDMS_files/Sample_2021_2496_20210916_123804.tdms";
-    String path2 = "/Users/annagregusova/java/TDMS_library/TDMS_files/coilResistanceTest_20210819_150423_0001.tdms";
-    String path3 = "/Users/annagregusova/java/TDMS_library/TDMS_files/Test_OK_Sample_20210916_125133 (2).tdms";x
-    String path4 = "/Users/annagregusova/java/TDMS_library/TDMS_files/Test_OK_Sample_20210916_125133 (1).tdms";
-    String path5 = "/Users/annagregusova/java/TDMS_library/TDMS_files/sent_test_20200826_135215_0001.tdms";
-    String path6 = "/Users/annagregusova/java/TDMS_library/TDMS_files/NH3_concentration_1a_0002.tdms";
-
+    ExpectedLeadInData.LeadInDataExpectations leadInDataExpectations;
+    private Path resourceDirectory = Paths.get("src", "test", "resources", "tdms_files");
+    private String getPath(String filename) {
+        return resourceDirectory.resolve(filename).toString();
+    }
+    String path1 = "tdms_files/Sample_2021_2496_20210916_123804.tdms";
+    String path2 = "tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
+    String path3 = "tdms_files/Test_OK_Sample_20210916_125133 (1).tdms";
+    String path4 = "tdms_files/sent_test_20200826_135215_0001.tdms";
+    String path5 = "tdms_files/NH3_concentration_1a_0002.tdms";
+    String path6 = "tdms_files/test_TDMS_20240404_103108_0009.tdms";
+    String path7 = "tdms_files/09_Point_T60C_V16000mV_20240315_102139.tdms";
     private void initializeReaderForFile(String filePath) throws IOException {
         this.raFile = new RandomAccessFile(filePath, "r");
         this.leadInDataReader = new LeadInDataReader(raFile, 0);
@@ -27,8 +34,7 @@ public class TDMSReaderTests {
 
     @BeforeEach
     void setUp() throws IOException {
-
-        String filePath = path6;
+        String filePath = getPath("Sample_2021_2496_20210916_123804.tdms");
         initializeReaderForFile(filePath);
         leadInDataExpectations = ExpectedLeadInData.getExpectations(filePath);
     }
@@ -85,7 +91,7 @@ class ExpectedLeadInData {
     }
 
     public static LeadInDataExpectations getExpectations(String filePath) {
-        return expectationsMap.getOrDefault(filePath, new LeadInDataExpectations(false, -1, -1, -1, -1));
+        return expectationsMap.getOrDefault(filePath, new LeadInDataExpectations(true, 4713, 14, 258094, 1582));
     }
 
     public static class LeadInDataExpectations {
@@ -103,4 +109,4 @@ class ExpectedLeadInData {
             this.rawDataOffset = rawDataOffset;
         }
     }
-}
+} 
