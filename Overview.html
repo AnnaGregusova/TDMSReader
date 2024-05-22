@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Project documentation</title>
+</head>
+<body>
+<h1>Project description</h1>
+<p>This Java library is designed for reading and processing of data stored in Technical Data Management Streaming (TDMS) format.</p>
+
+<h2>Structure</h2>
+<p>Project is divided into 11 classes</p>
+<ul>
+    <li><strong>DataReader:</strong> This class provides methods for reading and processing different data types.</li>
+    <li><strong>MetaDataReader:</strong> This class is responsible for reading and parsing file's meta data.</li>
+    <li><strong>LeadInDataReader:</strong> This class is responsible for reading and parsing file's lead in data.</li>
+    <li><strong>RawDataReader:</strong> This class is responsible for reading and parsing file's raw data.</li>
+    <li><strong>MetaData:</strong> This class represents the information and structure of files's meta data.</li>
+    <li><strong>LeadInData:</strong> This class represents the information and structure of file's lead in data.</li>
+    <li><strong>TDMSSegment:</strong> This class represents a segment in a TDMS file, encapsulating the lead-in data and metadata for that segment.</li>
+    <li><strong>TDMSGroup:</strong> This class represents a group within a TDMS file, containing channels and their associated properties.</li>
+    <li><strong>TDMSChannel:</strong> This class represents a channel in a TDMS file, including its properties and raw data.</li>
+    <li><strong>TDMSProperty:</strong> This class represents a property of a TDMS object, including its name, value, and data type.</li>
+    <li><strong>TDMSFile:</strong> This class represents a TDMS file, providing methods to read and organize its contents into groups and channels.</li>
+</ul>
+
+<h2>Installation</h2>
+<p>You can find the project here: <a href="https://github.com/AnnaGregusova/TDMSReader">https://github.com/AnnaGregusova/TDMSReader</a>. To run it you need to clone it using this command:</p>
+<pre>git clone https://github.com/AnnaGregusova/TDMSReader</pre>
+<p>After cloning use this command to go to the right repo:</p>
+<pre>cd TDMSReader</pre>
+<p>Now you can use maven to start the project</p>
+<pre>mvn clean install</pre>
+<pre>mvn exec:java</pre>
+<p>To generate documentation use the command:</p>
+<pre>mvn javadoc:javadoc</pre>
+
+<h2>Using the library</h2>
+<p>If you run the project, the first thing you will see is a question about which path (file) you want to execute.</p>
+
+<h2>Usage</h2>
+
+<h3>1. Initializing TDMS File:</h3>
+<pre><code>TDMSFile tdmsFile = TDMSFile.read(path);</code></pre>
+<p>Reads the TDMS file from the specified path and initializes a TDMSFile object.</p>
+
+<h3>2. Working with File Properties:</h3>
+<pre><code>tdmsFile.getProperties();</code></pre>
+<p>Returns ArrayList of TDMSProperty objects(properties) associated with the TDMS file.</p>
+
+<h3>3. Accessing Groups:</h3>
+<pre><code>ArrayList&lt;TDMSGroup&gt; groups = tdmsFile.getGroups();</code></pre>
+<p>Returns an ArrayList of TDMSGroup objects of all groups in the file.</p>
+<pre><code>TDMSGroup tdmsGroup = tdmsFile.getGroup("Group_name");</code></pre>
+<p>Returns a specific TDMSGroup by name.</p>
+
+<h3>4. Group Details and Channels:</h3>
+<pre><code>tdmsGroup.getName();</code></pre>
+<p>Returns the name of the group.</p>
+<pre><code>tdmsGroup.getProperties();</code></pre>
+<p>Returns an ArrayList of properties associated with the group.</p>
+<pre><code>tdmsGroup.getChannels();</code></pre>
+<p>Returns an ArrayList containing all TDMSChannels within the group.</p>
+<pre><code>TDMSChannel tdmsChannel = tdmsGroup.getChannel("Channel_name");</code></pre>
+<p>Obtains a specific channel by name from the group.</p>
+
+<h3>5. Channel Information and Data:</h3>
+<pre><code>tdmsChannel.getName();</code></pre>
+<p>Returns the name of the channel.</p>
+<pre><code>tdmsChannel.getProperties();</code></pre>
+<p>Returns an ArrayList of properties associated with the channel.</p>
+<pre><code>tdmsChannel.getPropertyValue("Property_name");</code></pre>
+<p>Returns the value of a specified property of the channel.</p>
+<pre><code>tdmsChannel.getRawData();</code></pre>
+<p>Returns all raw data from the channel.</p>
+<pre><code>tdmsChannel.getRawData(10);</
