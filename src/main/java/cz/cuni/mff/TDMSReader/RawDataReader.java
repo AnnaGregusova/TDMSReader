@@ -148,10 +148,12 @@ public class RawDataReader extends DataReader {
         return timestamps;
     }
 
-    private ArrayList<Object> readDoubleFloat() throws IOException {
-
+    private ArrayList<Object> readDoubleFloat(long numberOFRawData, int currentOffset) throws IOException {
+	
         ArrayList<Object> doubleFloats = new ArrayList<>();
         doubleFloats.add("Raw datas are " + DataTypeEnum.TDS_TYPE_DOUBLE_FLOAT.name());
+	System.out.println(currentOffset);
+		
         return doubleFloats;
 
     }
