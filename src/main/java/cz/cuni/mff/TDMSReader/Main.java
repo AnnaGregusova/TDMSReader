@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose which path do you want to read: " +
-                "path1, path2, path3, path4, path5, path6, path7, path8. Type 'exit' to quit.");
+                "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine().trim();
@@ -52,7 +52,7 @@ public class Main {
                     case "path8":
                         readPath8();
                         break;
-		   case "path9":
+      		   case "path9":
 			readPath9();
 			break;
 		   case "path10":
