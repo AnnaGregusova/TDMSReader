@@ -97,14 +97,17 @@ public class DataReader {
 
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
+        //printBytes(bytes);
 
         ArrayList<Byte> byteArrayList = new ArrayList<>();
         while (buffer.hasRemaining()) {
+
             byteArrayList.add(buffer.get());
             byte b = buffer.get();
             String hex = String.format("%02X", b); // Hexadecimal
             int decimal = b & 0xFF; // Decimal
-            System.out.println("Hex: " + hex + ", Decimal: " + decimal);
+            System.out.println(hex);
+            //System.out.println("Hex: " + hex + ", Decimal: " + decimal);
         }
         return bytes;
     }
@@ -118,7 +121,7 @@ public class DataReader {
         for (byte b : bytes) {
             String hex = String.format("%02X", b);
             int decimal = b & 0xFF;
-            System.out.print(hex);
+            System.out.println(hex);
         }
     }
 
