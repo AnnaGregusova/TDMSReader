@@ -106,6 +106,7 @@ public class TDMSReaderTests {
         assertEquals(0, exitCode);
 
         return groupNames;
+    }
 
     private List<String> getJavaGroupNames(String filePath) throws IOException {
         TDMSFile tdmsFile = TDMSFile.read(filePath);
