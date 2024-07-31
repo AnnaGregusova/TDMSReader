@@ -7,6 +7,7 @@ import java.util.ArrayList;
  * Class for reading metadata from a file.
  */
 public class MetaDataReader extends DataReader {
+    DataTypeReader dataTypeReader = new DataTypeReader();
     private long metaDataOffset;
     int numberOfObjects = 0;
     private boolean isFirstCallToGetGroups = true;
@@ -207,9 +208,13 @@ public class MetaDataReader extends DataReader {
                 case TDS_TYPE_FIXED_POINT:
                 case TDS_TYPE_DOUBLE_FLOAT:
                 case TDS_TYPE_EXTENDED_FLOAT_WITH_UNIT:
-                case TDS_TYPE_TIMESTAMP:
                     currentOffset += propertyDataType.getSize();
                     propertyValue = propertyDataType.name();
+                    break;
+                case TDS_TYPE_TIMESTAMP:
+
+                    propertyValue = dataTypeReader.readTimeStamp(currentOffset);
+                    currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_SINGLE_FLOAT_WITH_UNIT:
                     currentOffset += 12;
@@ -242,7 +247,7 @@ public class MetaDataReader extends DataReader {
      */
     private DataTypeEnum findDataTypeByValue(int offset) throws IOException {
         int DataTypeValue = readInt32(offset);
-
+        //System.out.println("Current offset for data tupes: " + offset);
         for (DataTypeEnum type : DataTypeEnum.values()) {
             if (type.getValue() == DataTypeValue) {
                 return type;
@@ -293,7 +298,7 @@ public class MetaDataReader extends DataReader {
             throw new IOException("TDMS library only supports data of dimension 1 and not " + dimension);
         }
         currentOffset += 4;
-
+        //System.out.println("Current offset for number of faw data values: " + currentOffset);
         long numberOfRawDataValues = readInt64(currentOffset);
         currentOffset += 8;
 
@@ -308,8 +313,10 @@ public class MetaDataReader extends DataReader {
         }
 
         if (FirstCall) {
+
             long rawDataOffset = LeadInData.rawDataOffset + 28;
             intRawDataIndex = (int) rawDataOffset;
+            //System.out.println("Current offset " + currentOffset);
             rawData = rawDataReader.getRawData(dataTypeOfRawData, numberOfRawDataValues, intRawDataIndex);
             long rawDataIndex = numberOfRawDataValues * sizeTypeOfRawData;
             intRawDataIndex += (int) rawDataIndex;
