@@ -4,6 +4,9 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 /**
@@ -12,6 +15,15 @@ import java.util.ArrayList;
 public class DataReader {
     RandomAccessFile file;
     FileChannel channel;
+
+    /**
+     * Constructs a DataReader with the given RandomAccessFile.
+     *
+     * @param file The RandomAccessFile to read from.
+     */
+    public DataReader(RandomAccessFile file) {
+        this.file = file;
+    }
 
     /**
      * Reads a 32-bit integer from the specified offset in the file.
@@ -106,7 +118,7 @@ public class DataReader {
             byte b = buffer.get();
             String hex = String.format("%02X", b); // Hexadecimal
             int decimal = b & 0xFF; // Decimal
-            System.out.println(hex);
+            //System.out.println(hex);
             //System.out.println("Hex: " + hex + ", Decimal: " + decimal);
         }
         return bytes;
@@ -121,17 +133,35 @@ public class DataReader {
         for (byte b : bytes) {
             String hex = String.format("%02X", b);
             int decimal = b & 0xFF;
-            System.out.println(hex);
+            //System.out.print(hex);
         }
+        //System.out.println();
     }
 
-    /**
-     * Constructs a DataReader with the given RandomAccessFile.
-     *
-     * @param file The RandomAccessFile to read from.
-     */
-    public DataReader(RandomAccessFile file) {
-        this.file = file;
+    class DataTypeReader{
+        Object readTimeStamp(int currentOffset) throws IOException {
+
+            byte [] bytes = readBytes(currentOffset, 16);
+
+            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+
+            // Extract fraction part
+            long fraction = buffer.getLong();
+            double result = 0D;
+            for (int j = 0; j < Long.BYTES * 8; j++) {
+                result += (fraction & 0x01);
+                result /= 2;
+                fraction >>>= 1;
+            }
+
+            // Extract seconds part
+            long seconds = buffer.getLong();
+            Instant niEpoch = OffsetDateTime.of(1904, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
+            Instant timestamp = niEpoch.plusSeconds(seconds).plusNanos(Double.valueOf(result * 1E9).longValue());
+
+            // Return the timestamp as a string
+            return timestamp;
+        }
     }
 
     /**
@@ -139,7 +169,6 @@ public class DataReader {
      */
     private class TDMSSegmentMask {
         private int mask;
-
         private final int metadataMask = 0b0000001;
         private final int rawdataMask = 0b0000100;
         private final int DAQmxMask = 0b1000000;
