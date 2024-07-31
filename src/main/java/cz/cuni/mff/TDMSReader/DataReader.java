@@ -133,15 +133,15 @@ public class DataReader {
         for (byte b : bytes) {
             String hex = String.format("%02X", b);
             int decimal = b & 0xFF;
-            //System.out.print(hex);
+            System.out.print(hex);
         }
-        //System.out.println();
+        System.out.println();
     }
 
-    class DataTypeReader{
+    class DataTypeReader {
         Object readTimeStamp(int currentOffset) throws IOException {
 
-            byte [] bytes = readBytes(currentOffset, 16);
+            byte[] bytes = readBytes(currentOffset, 16);
 
             ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
 
@@ -163,7 +163,6 @@ public class DataReader {
             return timestamp;
         }
     }
-
     /**
      * Inner class representing information about a TDMSSegment.
      */
