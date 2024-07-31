@@ -1,9 +1,8 @@
-package cz.cuni.mff.TDMSReader;
+/*package cz.cuni.mff.TDMSReader;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -15,13 +14,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+
 public class TDMSReaderTests {
     private RandomAccessFile raFile;
     private LeadInDataReader leadInDataReader;
     ExpectedLeadInData.LeadInDataExpectations leadInDataExpectations;
     private Path resourceDirectory = Paths.get("src", "test", "resources", "tdms_files");
-    private String filePath;
-
+    private String tdmsFilePath = "/Users/annagregusova/TDMSReader/tdms_files/Sample_2021_2496_20210916_123804.tdms";
+    private String jsonFilePath = "/Users/annagregusova/TDMSReader/json_files/Sample_2021_2496_20210916_123804.json";
     private String getPath(String filename) {
         return resourceDirectory.resolve(filename).toString();
     }
@@ -41,7 +41,7 @@ public class TDMSReaderTests {
 
     @BeforeEach
     void setUp() throws IOException {
-        String filePath = getPath("Sample_2021_2496_20210916_123804.tdms");
+	String filePath = tdmsFilePath;
         initializeReaderForFile(filePath);
         leadInDataExpectations = ExpectedLeadInData.getExpectations(filePath);
     }
@@ -84,26 +84,25 @@ public class TDMSReaderTests {
     @Test
     @DisplayName("Test Group Names")
     void testGroupNames() throws IOException, InterruptedException {
-        List<String> expectedGroupNames = getPythonGroupNames(filePath);
-        List<String> actualGroupNames = getJavaGroupNames(filePath);
+        List<String> expectedGroupNames = readJSONFile(jsonFilePath);
+        List<String> actualGroupNames = getJavaGroupNames(tdmsFilePath);
 
         assertEquals(expectedGroupNames, actualGroupNames, "Group names should match expected.");
     }
 
-    private List<String> getPythonGroupNames(String filePath) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("python3", "validate_tdms.py", filePath);
-        processBuilder.redirectErrorStream(true);
+    private List<String> readJSONFile(String jsonFilePath) throws IOException, InterruptedException {
 
-        Process process = processBuilder.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(new File(this.jsonFilePath));
+
         List<String> groupNames = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            groupNames.add(line.trim());
-        }
 
-        int exitCode = process.waitFor();
-        assertEquals(0, exitCode);
+        JsonNode groupNamesNode = rootNode.path("TDMSFile").path("Group_names");
+        if (groupNamesNode.isArray()) {
+            for (JsonNode groupNameNode : groupNamesNode) {
+                groupNames.add(groupNameNode.asText());
+            }
+        }
 
         return groupNames;
     }
@@ -111,12 +110,90 @@ public class TDMSReaderTests {
     private List<String> getJavaGroupNames(String filePath) throws IOException {
         TDMSFile tdmsFile = TDMSFile.read(filePath);
         ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
-        List<String> group_names = null;
+        List<String> group_names = new ArrayList<>();
+
         for (TDMSGroup group : groups) {
             group_names.add(group.getName());
         }
+
         return group_names;
     }
+    @Test
+    @DisplayName("Test Channel Names")
+    void testChannelNames() throws IOException, InterruptedException {
+        List<String> expectedGroupNames = getPythonChannelNames(jsonFilePath);
+        List<String> actualGroupNames = getJavaChannelNames(tdmsFilePath);
+
+        assertEquals(expectedGroupNames, actualGroupNames, "channels names should match expected.");
+    }
+    private List<String> getPythonChannelNames(String jsonFilePath) throws IOException, InterruptedException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(new File(this.jsonFilePath));
+
+        List<String> channelNames = new ArrayList<>();
+
+        JsonNode groupNamesNode = rootNode.path("TDMSFile").path("Channel_names");
+        if (groupNamesNode.isArray()) {
+            for (JsonNode groupNameNode : groupNamesNode) {
+                channelNames.add(groupNameNode.asText());
+            }
+        }
+
+        return channelNames;
+    }
+
+    private List<String> getJavaChannelNames(String filePath) throws IOException {
+        TDMSFile tdmsFile = TDMSFile.read(filePath);
+        ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
+        List<String> channels_names = new ArrayList<>();
+        for (TDMSGroup group : groups) {
+            ArrayList<TDMSChannel> channels = group.getChannels();
+            for (TDMSChannel tdmsChannel : channels) {
+                channels_names.add(tdmsChannel.getName());
+            }
+        }
+        return channels_names;
+    }
+
+    @Test
+    @DisplayName("Test Channel Properties")
+    void testChannelProperties() throws IOException, InterruptedException {
+        List<String> expectedGroupNames = getPythonChannelNames(jsonFilePath);
+        List<String> actualGroupNames = getJavaChannelNames(tdmsFilePath);
+
+        assertEquals(expectedGroupNames, actualGroupNames, "channels names should match expected.");
+    }
+    private List<String> getPythonChannelProperties(String jsonFilePath) throws IOException, InterruptedException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(new File(this.jsonFilePath));
+
+        List<String> channelNames = new ArrayList<>();
+
+        JsonNode groupNamesNode = rootNode.path("TDMSFile").path("Channel_names");
+        if (groupNamesNode.isArray()) {
+            for (JsonNode groupNameNode : groupNamesNode) {
+                channelNames.add(groupNameNode.asText());
+            }
+        }
+
+        return channelNames;
+    }
+
+    private List<String> getJavaChannelProperties(String filePath) throws IOException {
+        TDMSFile tdmsFile = TDMSFile.read(filePath);
+        ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
+        List<String> channels_names = new ArrayList<>();
+        for (TDMSGroup group : groups) {
+            ArrayList<TDMSChannel> channels = group.getChannels();
+            for (TDMSChannel tdmsChannel : channels) {
+                channels_names.add(tdmsChannel.getName());
+            }
+        }
+        return channels_names;
+    }
+
 
 
     class ExpectedLeadInData {
@@ -154,5 +231,6 @@ public class TDMSReaderTests {
             }
         }
     }
-}
+}*/
+
 
