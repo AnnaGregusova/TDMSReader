@@ -13,6 +13,7 @@ import java.util.Arrays;
  * Class for reading raw data from a file.
  */
 public class RawDataReader extends DataReader {
+    DataTypeReader dataTypeReader = new DataTypeReader();
     int currentOffsetRD;
     boolean isFirstCall = true;
     ArrayList<Object> rawData;
@@ -126,47 +127,17 @@ public class RawDataReader extends DataReader {
         ArrayList<Object> timestamps = new ArrayList<>();
         int countOfTimeStamps = 0;
         for (int i = 0; i < numberOFRawData; i++) {
-            byte[] raw = new byte[16];
-            raw = readBytes(currentOffsetRD, 16);
-            System.out.println(raw);
-            printBytes(raw);
-            ByteBuffer buffer = ByteBuffer.wrap(raw).order(ByteOrder.LITTLE_ENDIAN);
-
-            long fraction = buffer.getLong();
-            double result = 0D;
-            for (int j = 0; j < Long.BYTES * 8; j++) {
-                result += (fraction & 0x01);
-                result /= 2;
-                fraction >>>= 1;
-            }
-            currentOffsetRD += 16;
-
-            long seconds = buffer.getLong();
-            Instant niEpoch = OffsetDateTime.of(1904, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
-            Object obejctNiEPoch = niEpoch.plusSeconds(seconds).plusNanos(Double.valueOf(result * 1E9).longValue());
-
-            countOfTimeStamps++;
-            timestamps.add(obejctNiEPoch);
+           timestamps.add(dataTypeReader.readTimeStamp(currentOffsetRD));
+           currentOffsetRD += 16;
         }
         //System.out.println("Current offset: " + currentOffset);
         return timestamps;
     }
 
     private ArrayList<Object> readDoubleFloat(long numberOFRawData, int currentOffset) throws IOException {
-        System.out.println(numberOFRawData);
-       // System.out.println("Raw datas are " + DataTypeEnum.TDS_TYPE_DOUBLE_FLOAT.name());
-        //System.out.println("Current offset: " + currentOffset);
-        ArrayList<Object> doubleFloats = new ArrayList<>();
-        System.out.println(currentOffset);
-        for (int i = 0; i < numberOFRawData; i++){
-            doubleFloats.add(readBytes(currentOffset, 8));
 
-            currentOffset += 8;
-        }
-        System.out.println("Current offest double: " + currentOffset);
-	    //System.out.println(currentOffset);
-        //readBytes(currentOffset, 16);
-		
+        ArrayList<Object> doubleFloats = new ArrayList<>();
+        doubleFloats.add("Raw datas are " + DataTypeEnum.TDS_TYPE_DOUBLE_FLOAT.name());
         return doubleFloats;
 
     }
