@@ -1,4 +1,4 @@
-/*package cz.cuni.mff.TDMSReader;
+package cz.cuni.mff.TDMSReader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -231,6 +231,6 @@ public class TDMSReaderTests {
             }
         }
     }
-}*/
+}
 
 
