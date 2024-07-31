@@ -194,9 +194,7 @@ public class MetaDataReader extends DataReader {
             Object propertyValue;
 
             switch (propertyDataType) {
-                case TDS_TYPE_I8:
                 case TDS_TYPE_I16:
-                case TDS_TYPE_I32:
                 case TDS_TYPE_I64:
                 case TDS_TYPE_U8:
                 case TDS_TYPE_U16:
@@ -210,23 +208,37 @@ public class MetaDataReader extends DataReader {
                 case TDS_TYPE_EXTENDED_FLOAT_WITH_UNIT:
                     currentOffset += propertyDataType.getSize();
                     propertyValue = propertyDataType.name();
+                    System.out.println(propertyDataType.name());
+                    break;
+                case TDS_TYPE_I8:
+                    System.out.println(propertyDataType.getSize());
+                    propertyValue = readInt32(currentOffset);
+                    System.out.println(propertyValue);
+                    currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_TIMESTAMP:
-
+                    System.out.println(propertyDataType.name());
                     propertyValue = dataTypeReader.readTimeStamp(currentOffset);
                     currentOffset += propertyDataType.getSize();
                     break;
+                case TDS_TYPE_I32:
+                    propertyValue = readInt32(currentOffset);
+                    currentOffset += propertyDataType.getSize();
+                    break;
                 case TDS_TYPE_SINGLE_FLOAT_WITH_UNIT:
+                    System.out.println(propertyDataType.name());
                     currentOffset += 12;
                     propertyValue = propertyDataType.name();
                     break;
                 case TDS_TYPE_STRING:
+                    System.out.println(propertyDataType.name());
                     int lengthOfPropertyValue = readInt32(currentOffset);
                     currentOffset += 4;
                     propertyValue = readString(currentOffset, lengthOfPropertyValue);
                     currentOffset += lengthOfPropertyValue;
                     break;
                 default:
+                    System.out.println(propertyDataType.name());
                     propertyValue = readInt32(currentOffset);
                     currentOffset += 4;
                     break;
