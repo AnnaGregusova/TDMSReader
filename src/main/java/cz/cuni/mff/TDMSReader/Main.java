@@ -90,7 +90,22 @@ public class Main {
         System.out.println("TDMs file properties: " + tdmsFile.getProperties());
 
         ArrayList<TDMSGroup> groups = tdmsFile.getGroups();
-        System.out.println("File groups: " + groups);
+        ArrayList<ArrayList<TDMSProperty>> allProperties = new ArrayList<>();
+        for (TDMSGroup group: groups) {
+            ArrayList<TDMSChannel> channels = group.getChannels();
+
+            for (TDMSChannel tdmsChannel : channels) {
+                ArrayList<TDMSProperty> properties = tdmsChannel.getProperties();
+                allProperties.add(properties);
+                }
+
+            }
+        System.out.println(allProperties);
+        System.out.println("Choose which path do you want to read: " +
+                "path1, path2, path3, path4, path5, path6. Type 'exit' to quit.");
+        }
+
+        /*System.out.println("File groups: " + groups);
 
         TDMSGroup tdmsGroup = tdmsFile.getGroup("/'SENT channels'");
         System.out.println("Group properties: ");
@@ -99,16 +114,23 @@ public class Main {
         ArrayList<TDMSChannel> channels = tdmsGroup.getChannels();
         System.out.println(channels);
         TDMSChannel tdmsChannel = tdmsGroup.getChannel("/'SENT channels'/'Date time\n" +
-                "S2021_2496_pressure'");
-        System.out.println("Channel name: " + tdmsChannel.getName());
+                "S2021_2496_pressure'");*/
+       /* for (TDMSGroup group : groups) {
+            ArrayList<TDMSChannel> channels = group.getChannels();
+            for (TDMSChannel tdmsChannel : channels) {
+                ArrayList<Object> rawData = tdmsChannel.getRawData(1);
+                //System.out.println(tdmsChannel.getName());
+                //System.out.println(rawData);
+            }
+        }*/
+        /*System.out.println("Channel name: " + tdmsChannel.getName());
         System.out.println("Printing channel properties");
         System.out.println(tdmsChannel.getProperties());
         Object channelPropertyValue = tdmsChannel.getPropertyValue("wf_increment");
         System.out.println("Getting channel property Value: ");
-        System.out.println(channelPropertyValue);
-        System.out.println("Choose which path do you want to read: " +
-                "path1, path2, path3, path4, path5, path6. Type 'exit' to quit.");
-    }
+        System.out.println(channelPropertyValue);*/
+
+
 
     /**
      * Reads and processes the TDMS file specified in the path2.
@@ -134,8 +156,15 @@ public class Main {
         System.out.println(tdmsChannel.getProperties());
         Object channelPropertyValue = tdmsChannel.getPropertyValue("wf_samples");
         System.out.println("Property value: " + channelPropertyValue);
+        System.out.println("ALL RAW DATAS");
+        for (TDMSChannel Channel : channels) {
+            ArrayList<Object> rawDatas = Channel.getRawData(10);
+            System.out.println(tdmsChannel.getName());
+            System.out.println(rawDatas);
+        }
         System.out.println("Choose which path do you want to read: " +
                 "path1, path2, path3, path4, path5, path6. Type 'exit' to quit.");
+
     }
 
     /**
