@@ -37,10 +37,7 @@ public class TDMSChannel {
      * @return The properties of the channel.
      */
     public ArrayList<TDMSProperty> getProperties() {
-        if (properties == null) {
-            System.out.println("No properties");
-            return null;
-        }
+
         return properties;
     }
 
@@ -54,14 +51,16 @@ public class TDMSChannel {
     }
     public ArrayList<Object> getRawData(int count){
         ArrayList<Object> rawDatas = new ArrayList<>();
-        if (rawData.size() > count){
+        //System.out.println("Getting the raww data");
+        if (rawData.size() >= count){
             for (int i = 0; i< count; i++){
                 rawDatas.add(rawData.get(i));
             }
             return  rawDatas;
-
         }
-        return null;
+        else{
+            return rawData;
+        }
     }
 
     /**
@@ -72,7 +71,7 @@ public class TDMSChannel {
      */
     public Object getPropertyValue(String name) {
         try {
-            if(properties == null) {return "No properties";}
+            //if(properties == null) {return "No properties";}
             for (TDMSProperty property : properties) {
                 if (property.getPropertyName().equals(name)) {
                     return property.getPropertyValue();
