@@ -39,11 +39,9 @@ public class RawDataReader extends DataReader {
     public ArrayList<Object> getRawData(DataTypeEnum dataTypeOfRawData, long numberOfRawDataValues, int currentOffset) throws IOException {
         switch (dataTypeOfRawData) {
             case TDS_TYPE_TIMESTAMP:
-                rawData = readTimeStamps(numberOfRawDataValues, currentOffset);
-                break;
+                return readTimeStamps(numberOfRawDataValues, currentOffset);
             case TDS_TYPE_DOUBLE_FLOAT:
-                rawData = readDoubleFloat(numberOfRawDataValues, currentOffset);
-                break;
+                return readDoubleFloat();
             case TDS_TYPE_I8:
                 rawData = readTypeI8(numberOfRawDataValues, currentOffset);
                 break;
@@ -120,6 +118,9 @@ public class RawDataReader extends DataReader {
      * @throws IOException If an I/O error occurs while reading the file.
      */
     private ArrayList<Object> readTimeStamps(long numberOFRawData, int currentOffset) throws IOException {
+        //System.out.println("Raw datas are timestamps");
+
+        //printBytes(readBytes(currentOffset, 32));
         if (isFirstCall) {
             currentOffsetRD = currentOffset;
             isFirstCall = false;
@@ -132,7 +133,7 @@ public class RawDataReader extends DataReader {
         return timestamps;
     }
 
-    private ArrayList<Object> readDoubleFloat(long numberOFRawData, int currentOffset) throws IOException {
+    private ArrayList<Object> readDoubleFloat() throws IOException {
 
         ArrayList<Object> doubleFloats = new ArrayList<>();
         doubleFloats.add("Raw datas are " + DataTypeEnum.TDS_TYPE_DOUBLE_FLOAT.name());
