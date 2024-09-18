@@ -208,16 +208,16 @@ public class MetaDataReader extends DataReader {
                 case TDS_TYPE_EXTENDED_FLOAT_WITH_UNIT:
                     currentOffset += propertyDataType.getSize();
                     propertyValue = propertyDataType.name();
-                    System.out.println(propertyDataType.name());
+                    //System.out.println(propertyDataType.name());
                     break;
                 case TDS_TYPE_I8:
-                    System.out.println(propertyDataType.getSize());
+                    //System.out.println(propertyDataType.getSize());
                     propertyValue = readInt32(currentOffset);
-                    System.out.println(propertyValue);
+                    //System.out.println(propertyValue);
                     currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_TIMESTAMP:
-                    System.out.println(propertyDataType.name());
+                    //System.out.println(propertyDataType.name());
                     propertyValue = dataTypeReader.readTimeStamp(currentOffset);
                     currentOffset += propertyDataType.getSize();
                     break;
@@ -226,19 +226,19 @@ public class MetaDataReader extends DataReader {
                     currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_SINGLE_FLOAT_WITH_UNIT:
-                    System.out.println(propertyDataType.name());
+                    //System.out.println(propertyDataType.name());
                     currentOffset += 12;
                     propertyValue = propertyDataType.name();
                     break;
                 case TDS_TYPE_STRING:
-                    System.out.println(propertyDataType.name());
+                    //System.out.println(propertyDataType.name());
                     int lengthOfPropertyValue = readInt32(currentOffset);
                     currentOffset += 4;
                     propertyValue = readString(currentOffset, lengthOfPropertyValue);
                     currentOffset += lengthOfPropertyValue;
                     break;
                 default:
-                    System.out.println(propertyDataType.name());
+                    //System.out.println(propertyDataType.name());
                     propertyValue = readInt32(currentOffset);
                     currentOffset += 4;
                     break;
@@ -310,7 +310,6 @@ public class MetaDataReader extends DataReader {
             throw new IOException("TDMS library only supports data of dimension 1 and not " + dimension);
         }
         currentOffset += 4;
-        //System.out.println("Current offset for number of faw data values: " + currentOffset);
         long numberOfRawDataValues = readInt64(currentOffset);
         currentOffset += 8;
 
@@ -325,10 +324,8 @@ public class MetaDataReader extends DataReader {
         }
 
         if (FirstCall) {
-
             long rawDataOffset = LeadInData.rawDataOffset + 28;
             intRawDataIndex = (int) rawDataOffset;
-            //System.out.println("Current offset " + currentOffset);
             rawData = rawDataReader.getRawData(dataTypeOfRawData, numberOfRawDataValues, intRawDataIndex);
             long rawDataIndex = numberOfRawDataValues * sizeTypeOfRawData;
             intRawDataIndex += (int) rawDataIndex;
