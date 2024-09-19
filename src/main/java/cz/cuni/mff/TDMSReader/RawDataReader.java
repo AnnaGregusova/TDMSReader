@@ -39,14 +39,16 @@ public class RawDataReader extends DataReader {
     public ArrayList<Object> getRawData(DataTypeEnum dataTypeOfRawData, long numberOfRawDataValues, int currentOffset) throws IOException {
         switch (dataTypeOfRawData) {
             case TDS_TYPE_TIMESTAMP:
-                return readTimeStamps(numberOfRawDataValues, currentOffset);
+                rawData = readTimeStamps(numberOfRawDataValues, currentOffset);
+                break;
             case TDS_TYPE_DOUBLE_FLOAT:
-                return readDoubleFloat();
+                rawData = readDoubleFloat(numberOfRawDataValues, currentOffset);
+                break;
             case TDS_TYPE_I8:
                 rawData = readTypeI8(numberOfRawDataValues, currentOffset);
                 break;
             case TDS_TYPE_I16:
-                rawData = readTypeI16();
+                rawData = readTypeI16(numberOfRawDataValues, currentOffset);
                 break;
             case TDS_TYPE_I32:
                 rawData = readTypeI32(numberOfRawDataValues, currentOffset);
@@ -107,8 +109,6 @@ public class RawDataReader extends DataReader {
         return rawData;
     }
 
-    // Other methods...
-
     /**
      * Reads timestamps from the file.
      *
@@ -118,28 +118,27 @@ public class RawDataReader extends DataReader {
      * @throws IOException If an I/O error occurs while reading the file.
      */
     private ArrayList<Object> readTimeStamps(long numberOFRawData, int currentOffset) throws IOException {
-        //System.out.println("Raw datas are timestamps");
 
-        //printBytes(readBytes(currentOffset, 32));
-        if (isFirstCall) {
-            currentOffsetRD = currentOffset;
-            isFirstCall = false;
-        }
+
         ArrayList<Object> timestamps = new ArrayList<>();
         for (int i = 0; i < numberOFRawData; i++) {
-           timestamps.add(dataTypeReader.readTimeStamp(currentOffsetRD));
-           currentOffsetRD += 16;
+           timestamps.add(dataTypeReader.readTimeStamp(currentOffset));
+           currentOffset += 16;
         }
         return timestamps;
     }
 
-    private ArrayList<Object> readDoubleFloat() throws IOException {
+    private ArrayList<Object> readDoubleFloat(long numberOfRawData, int currentOffset) throws IOException {
 
-        ArrayList<Object> doubleFloats = new ArrayList<>();
-        doubleFloats.add("Raw datas are " + DataTypeEnum.TDS_TYPE_DOUBLE_FLOAT.name());
-        return doubleFloats;
+        ArrayList<Object> doubles = new ArrayList<>();
+        for (int i = 0; i < numberOfRawData; i++) {
+            doubles.add(dataTypeReader.readDoubleFloat(currentOffset));
+            currentOffset += 8;
+        }
+        return  doubles;
 
     }
+
     private ArrayList<Object> readVoid() {
         ArrayList<Object> voids = new ArrayList<>();
         voids.add("Raw datas are " + DataTypeEnum.DS_TYPE_VOID.name());
@@ -147,38 +146,27 @@ public class RawDataReader extends DataReader {
     }
 
     private ArrayList<Object> readTypeI8(long numberOFRawData, int currentOffset) throws IOException {
-       /* if (isFirstCall) {
-            currentOffsetRD = currentOffset;
-            isFirstCall = false;
-        }
-
-
-        for (int i = 0; i < numberOFRawData; i++){
-            printBytes(readBytes(currentOffsetRD, 8));
-            currentOffsetRD+=8;
-        }*/
         ArrayList<Object> typeI8 = new ArrayList<>();
         typeI8.add("Raw datas are " + DataTypeEnum.TDS_TYPE_I8.name());
         return typeI8;
     }
 
-    private ArrayList<Object> readTypeI16() {
+    private ArrayList<Object> readTypeI16(long numberOfRawData, int currentOffset) throws IOException {
         ArrayList<Object> typeI16 = new ArrayList<>();
-        typeI16.add("Raw datas are " + DataTypeEnum.TDS_TYPE_I16.name());
+        for (int i = 0; i < numberOfRawData; i++){
+            int int16 = readInt32(currentOffset);
+            typeI16.add(int16);
+        }
         return typeI16;
     }
 
     private ArrayList<Object> readTypeI32(long numberOfRawData, int currentOffset) throws IOException {
-        if (isFirstCall) {
-            currentOffsetRD = currentOffset;
-            isFirstCall = false;
-        }
+
         ArrayList<Object> typeI32 = new ArrayList<>();
         for (int i = 0; i < numberOfRawData; i++){
             int int32 = readInt32(currentOffset);
             typeI32.add(int32);
         }
-        //typeI32.add("Raw datas are " + DataTypeEnum.TDS_TYPE_I32.name());
         return typeI32;
     }
 
