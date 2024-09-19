@@ -162,6 +162,12 @@ public class DataReader {
             // Return the timestamp as a string
             return timestamp;
         }
+        Object readDoubleFloat(int currentOffset) throws IOException{
+
+            byte [] bytes = readBytes(currentOffset, 8);
+            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
+            return buffer.getDouble();
+        }
     }
     /**
      * Inner class representing information about a TDMSSegment.
