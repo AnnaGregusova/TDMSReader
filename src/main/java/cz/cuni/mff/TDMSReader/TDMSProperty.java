@@ -1,9 +1,9 @@
 package cz.cuni.mff.TDMSReader;
+
 /**
  * Represents a property within a TDMS (Technical Data Management Streaming) file.
  */
 public class TDMSProperty {
-
     private String propertyName;
     private Object propertyValue;
     private Object propertyDataType;
@@ -15,7 +15,7 @@ public class TDMSProperty {
      * @param propertyValue    The value of the property.
      * @param propertyDataType The data type of the property.
      */
-    public TDMSProperty(String name, Object propertyValue, Object propertyDataType){
+    public TDMSProperty(String name, Object propertyValue, Object propertyDataType) {
         this.propertyName = name;
         this.propertyValue = propertyValue;
         this.propertyDataType = propertyDataType;
@@ -35,17 +35,14 @@ public class TDMSProperty {
      *
      * @return The value of the property.
      */
-    public Object getPropertyValue() {
-        return propertyValue;
-    }
+    public Object getPropertyValue() { return propertyValue; }
 
     /**
      * Retrieves the data type of the property.
      *
      * @return The data type of the property.
      */
-    public Object getPropertyDataType(){
-        return propertyDataType;
+    public Object getPropertyDataType() { return propertyDataType;
     }
 
     /**
@@ -57,7 +54,7 @@ public class TDMSProperty {
     public String toString() {
         return "Property { " +
                 "name='" + propertyName + '\'' +
-                ", value= " + propertyValue+
+                ", value= " + propertyValue +
                 '}';
     }
 }

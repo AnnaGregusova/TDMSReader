@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 /**
  * Represents a segment within a TDMS (Technical Data Management Streaming) file.
  */
@@ -12,7 +13,7 @@ class TDMSSegment {
      * @param leadInData The lead-in data of the segment.
      * @param metaData   The metadata of the segment.
      */
-    public TDMSSegment(LeadInData leadInData, MetaData metaData){
+    public TDMSSegment(LeadInData leadInData, MetaData metaData) {
         this.leadInData = leadInData;
         this.metaData = metaData;
     }
@@ -31,7 +32,5 @@ class TDMSSegment {
      *
      * @return The metadata of the segment.
      */
-    public MetaData getMetaData(){
-        return metaData;
-    }
+    public MetaData getMetaData() { return metaData; }
 }

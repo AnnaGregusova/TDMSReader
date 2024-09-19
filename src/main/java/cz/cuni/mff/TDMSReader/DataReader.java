@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -140,9 +141,7 @@ public class DataReader {
 
     class DataTypeReader {
         Object readTimeStamp(int currentOffset) throws IOException {
-
             byte[] bytes = readBytes(currentOffset, 16);
-
             ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
 
             // Extract fraction part
@@ -162,13 +161,14 @@ public class DataReader {
             // Return the timestamp as a string
             return timestamp;
         }
-        Object readDoubleFloat(int currentOffset) throws IOException{
 
-            byte [] bytes = readBytes(currentOffset, 8);
+        Object readDoubleFloat(int currentOffset) throws IOException {
+            byte[] bytes = readBytes(currentOffset, 8);
             ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
             return buffer.getDouble();
         }
     }
+
     /**
      * Inner class representing information about a TDMSSegment.
      */
@@ -184,12 +184,12 @@ public class DataReader {
         /**
          * Constructs a TDMSSegmentInfo with the given mask and boolean values.
          *
-         * @param mask              The mask representing the segment info.
-         * @param hasMetaData       Indicates if metadata is present.
-         * @param hasRawData        Indicates if raw data is present.
-         * @param hasDAQmxMask      Indicates if DAQmx mask is present.
-         * @param isInterleaved     Indicates if data is interleaved.
-         * @param isBigEndian       Indicates if data is in big endian format.
+         * @param mask             The mask representing the segment info.
+         * @param hasMetaData      Indicates if metadata is present.
+         * @param hasRawData       Indicates if raw data is present.
+         * @param hasDAQmxMask     Indicates if DAQmx mask is present.
+         * @param isInterleaved    Indicates if data is interleaved.
+         * @param isBigEndian      Indicates if data is in big endian format.
          * @param hasNewObjectList Indicates if a new object list is present.
          */
         public TDMSSegmentMask(int mask, boolean hasMetaData, boolean hasRawData, boolean hasDAQmxMask,

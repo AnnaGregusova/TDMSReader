@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 import java.util.ArrayList;
 
 /**
@@ -16,7 +17,7 @@ public class TDMSGroup {
      * @param properties The properties associated with the group.
      * @param channels   The channels belonging to the group.
      */
-    public TDMSGroup(String name, ArrayList<TDMSProperty> properties, ArrayList<TDMSChannel> channels){
+    public TDMSGroup(String name, ArrayList<TDMSProperty> properties, ArrayList<TDMSChannel> channels) {
         this.name = name;
         this.properties = properties;
         this.channels = channels;
@@ -27,17 +28,16 @@ public class TDMSGroup {
      *
      * @return The name of the group.
      */
-    public String getName() {return name;}
+    public String getName() {
+        return name;
+    }
 
     /**
      * Retrieves the properties associated with the group.
      *
      * @return An ArrayList of TDMSProperty objects representing the properties of the group.
      */
-    public ArrayList<TDMSProperty> getProperties(){
-
-        return properties;
-    }
+    public ArrayList<TDMSProperty> getProperties() { return properties; }
 
     /**
      * Retrieves the channels belonging to the group.
@@ -82,6 +82,7 @@ public class TDMSGroup {
                 "name= " + name + ' ' +
                 '}';
     }
+
     public class ChannelNotFoundException extends Exception {
         public ChannelNotFoundException(String message) {
             super(message);

@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,7 +12,6 @@ public class TDMSFile {
     private static RandomAccessFile file;
     private static ArrayList<TDMSSegment> segments = new ArrayList<TDMSSegment>();
     private static ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
-
     private static ArrayList<TDMSProperty> tdmsFileProperties = new ArrayList<>();
 
     /**
@@ -32,19 +32,16 @@ public class TDMSFile {
      * @throws IOException if an I/O error occurs while reading the file.
      */
     public static TDMSFile read(String filePath) throws IOException {
-
         try {
             int segmentOffset = 0;
             file = new RandomAccessFile(filePath, "r");
             long fileSize = file.length();
             TDMSFile tdmsFile = new TDMSFile(file);
             tdmsFile.readSegments(segmentOffset, fileSize);
-
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             if (file != null) {
                 try {
                     file.close();
@@ -91,21 +88,19 @@ public class TDMSFile {
             LeadInData leadInData = leadInDataReader.createLeadInData();
             MetaData metaData = metaDataReader.createMetaData();
             return new TDMSSegment(leadInData, metaData);
-
-        }
-        else {
+        } else {
             System.out.println("Invalid TDMS file tag. The file might not be a valid TDMS file.");
             return null;
         }
     }
+
     /**
      * Retrieves the properties of the TDMS file.
      *
      * @return An ArrayList of TDMSProperty objects representing the properties of the file.
      */
-    public ArrayList<TDMSProperty> getProperties(){
-
-        for (TDMSSegment segment : segments){
+    public ArrayList<TDMSProperty> getProperties() {
+        for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
             tdmsFileProperties = metaData.getTDMSFileProperties();
         }
@@ -138,14 +133,13 @@ public class TDMSFile {
         }
     }
 
-
     /**
      * Retrieves all groups from the TDMS file.
      *
      * @return An ArrayList of TDMSGroup objects representing all groups in the file.
      */
-    public ArrayList<TDMSGroup> getGroups(){
-        for (TDMSSegment segment : segments){
+    public ArrayList<TDMSGroup> getGroups() {
+        for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
             groups = metaData.getGroups();
         }
@@ -153,8 +147,8 @@ public class TDMSFile {
     }
 
     /**
-    * Prints the metadata of the TDMS file segments.
-    */
+     * Prints the metadata of the TDMS file segments.
+     */
     public void printMetaData() {
         for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
@@ -178,10 +172,10 @@ public class TDMSFile {
             System.out.println("--------------------------------");
         }
     }
+
     public class GroupNotFoundException extends Exception {
         public GroupNotFoundException(String message) {
             super(message);
         }
     }
-
 }

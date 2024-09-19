@@ -1,13 +1,8 @@
 package cz.cuni.mff.TDMSReader;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Class for reading raw data from a file.
@@ -30,9 +25,9 @@ public class RawDataReader extends DataReader {
     /**
      * Gets the raw data based on the data type.
      *
-     * @param dataTypeOfRawData The data type of the raw data.
+     * @param dataTypeOfRawData     The data type of the raw data.
      * @param numberOfRawDataValues The number of raw data values.
-     * @param currentOffset The current offset in the file.
+     * @param currentOffset         The current offset in the file.
      * @return The raw data.
      * @throws IOException If an I/O error occurs while reading the file.
      */
@@ -105,7 +100,6 @@ public class RawDataReader extends DataReader {
                 // Handle other enum values here
                 break;
         }
-
         return rawData;
     }
 
@@ -113,30 +107,26 @@ public class RawDataReader extends DataReader {
      * Reads timestamps from the file.
      *
      * @param numberOFRawData The number of raw data values.
-     * @param currentOffset The current offset in the file.
+     * @param currentOffset   The current offset in the file.
      * @return The list of timestamps.
      * @throws IOException If an I/O error occurs while reading the file.
      */
     private ArrayList<Object> readTimeStamps(long numberOFRawData, int currentOffset) throws IOException {
-
-
         ArrayList<Object> timestamps = new ArrayList<>();
         for (int i = 0; i < numberOFRawData; i++) {
-           timestamps.add(dataTypeReader.readTimeStamp(currentOffset));
-           currentOffset += 16;
+            timestamps.add(dataTypeReader.readTimeStamp(currentOffset));
+            currentOffset += 16;
         }
         return timestamps;
     }
 
     private ArrayList<Object> readDoubleFloat(long numberOfRawData, int currentOffset) throws IOException {
-
         ArrayList<Object> doubles = new ArrayList<>();
         for (int i = 0; i < numberOfRawData; i++) {
             doubles.add(dataTypeReader.readDoubleFloat(currentOffset));
             currentOffset += 8;
         }
-        return  doubles;
-
+        return doubles;
     }
 
     private ArrayList<Object> readVoid() {
@@ -153,7 +143,7 @@ public class RawDataReader extends DataReader {
 
     private ArrayList<Object> readTypeI16(long numberOfRawData, int currentOffset) throws IOException {
         ArrayList<Object> typeI16 = new ArrayList<>();
-        for (int i = 0; i < numberOfRawData; i++){
+        for (int i = 0; i < numberOfRawData; i++) {
             int int16 = readInt32(currentOffset);
             typeI16.add(int16);
         }
@@ -161,9 +151,8 @@ public class RawDataReader extends DataReader {
     }
 
     private ArrayList<Object> readTypeI32(long numberOfRawData, int currentOffset) throws IOException {
-
         ArrayList<Object> typeI32 = new ArrayList<>();
-        for (int i = 0; i < numberOfRawData; i++){
+        for (int i = 0; i < numberOfRawData; i++) {
             int int32 = readInt32(currentOffset);
             typeI32.add(int32);
         }
@@ -277,6 +266,4 @@ public class RawDataReader extends DataReader {
         typeDaqmxRawData.add("Raw datas are " + DataTypeEnum.TDS_TYPE_DAQMX_RAW_DATA.name());
         return typeDaqmxRawData;
     }
-
-
 }

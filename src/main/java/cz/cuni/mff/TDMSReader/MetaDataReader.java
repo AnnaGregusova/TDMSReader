@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class MetaDataReader extends DataReader {
     /**
      * Constructs a MetaDataReader with the given RandomAccessFile and metadata offset.
      *
-     * @param file          The RandomAccessFile to read from.
+     * @param file           The RandomAccessFile to read from.
      * @param metaDataOffset The offset of the metadata.
      * @throws IOException If an I/O error occurs while reading the file.
      */
@@ -190,7 +191,6 @@ public class MetaDataReader extends DataReader {
             currentOffset += lengthOfPropertyName;
             DataTypeEnum propertyDataType = findDataTypeByValue(currentOffset);
             currentOffset += 4;
-
             Object propertyValue;
 
             switch (propertyDataType) {
@@ -208,16 +208,12 @@ public class MetaDataReader extends DataReader {
                 case TDS_TYPE_EXTENDED_FLOAT_WITH_UNIT:
                     currentOffset += propertyDataType.getSize();
                     propertyValue = propertyDataType.name();
-                    //System.out.println(propertyDataType.name());
                     break;
                 case TDS_TYPE_I8:
-                    //System.out.println(propertyDataType.getSize());
                     propertyValue = readInt32(currentOffset);
-                    //System.out.println(propertyValue);
                     currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_TIMESTAMP:
-                    //System.out.println(propertyDataType.name());
                     propertyValue = dataTypeReader.readTimeStamp(currentOffset);
                     currentOffset += propertyDataType.getSize();
                     break;
@@ -226,27 +222,22 @@ public class MetaDataReader extends DataReader {
                     currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_SINGLE_FLOAT_WITH_UNIT:
-                    //System.out.println(propertyDataType.name());
                     currentOffset += 12;
                     propertyValue = propertyDataType.name();
                     break;
                 case TDS_TYPE_STRING:
-                    //System.out.println(propertyDataType.name());
                     int lengthOfPropertyValue = readInt32(currentOffset);
                     currentOffset += 4;
                     propertyValue = readString(currentOffset, lengthOfPropertyValue);
                     currentOffset += lengthOfPropertyValue;
                     break;
                 default:
-                    //System.out.println(propertyDataType.name());
                     propertyValue = readInt32(currentOffset);
                     currentOffset += 4;
                     break;
             }
-
             properties.add(new TDMSProperty(propertyName, propertyValue, propertyDataType));
         }
-
         return properties;
     }
 
@@ -290,31 +281,31 @@ public class MetaDataReader extends DataReader {
      */
     public TDMSChannel getChannel() throws IOException {
         numberOfObjects--;
+
         ArrayList<TDMSProperty> properties;
         ArrayList<Object> rawData;
+
         int nextObjectPathLength = readInt32(currentOffset);
         currentOffset += 4;
         String channelName = readString(currentOffset, nextObjectPathLength);
         currentOffset += nextObjectPathLength;
-
         int lengthOfIndexInformation = readInt32(currentOffset);
         currentOffset += 4;
         DataTypeEnum dataTypeOfRawData = findDataTypeByValue(currentOffset);
         int valueTypeOfRawData = dataTypeOfRawData.getValue();
         int sizeTypeOfRawData = dataTypeOfRawData.getSize();
-
         currentOffset += 4;
-        int dimension = readInt32(currentOffset);
 
+        int dimension = readInt32(currentOffset);
         if (dimension != 1) {
             throw new IOException("TDMS library only supports data of dimension 1 and not " + dimension);
         }
         currentOffset += 4;
+
         long numberOfRawDataValues = readInt32(currentOffset);
         currentOffset += 8;
 
         int numberOfProperties = readInt32(currentOffset);
-
         RawDataReader rawDataReader = new RawDataReader(this.file);
         if (numberOfProperties != 0) {
             properties = getProperties();

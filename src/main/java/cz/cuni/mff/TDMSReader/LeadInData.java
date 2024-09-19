@@ -1,13 +1,14 @@
 package cz.cuni.mff.TDMSReader;
+
 /**
  * Class representing lead-in data with tag, mask, version, segment offset, and raw data offset.
  */
 public class LeadInData {
-    private String tag;
-    private int mask;
-    private int version;
-    private long segmentOffset;
     public static long rawDataOffset = 1656;
+    private final String tag;
+    private final int mask;
+    private final int version;
+    private final long segmentOffset;
 
     /**
      * Constructs a LeadInData object with the given parameters.
@@ -23,7 +24,7 @@ public class LeadInData {
         this.mask = mask;
         this.version = version;
         this.segmentOffset = segmentOffset;
-        this.rawDataOffset = rawDataOffset;
+        LeadInData.rawDataOffset = rawDataOffset;
     }
 
     /**

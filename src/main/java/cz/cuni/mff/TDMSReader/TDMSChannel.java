@@ -37,7 +37,6 @@ public class TDMSChannel {
      * @return The properties of the channel.
      */
     public ArrayList<TDMSProperty> getProperties() {
-
         return properties;
     }
 
@@ -50,16 +49,14 @@ public class TDMSChannel {
         return rawData;
     }
     public ArrayList<Object> getRawData(int count){
-        ArrayList<Object> rawDatas = new ArrayList<>();
+        ArrayList<Object> tempRawData = new ArrayList<>();
         if (rawData.size() >= count){
             for (int i = 0; i< count; i++){
-                rawDatas.add(rawData.get(i));
+                tempRawData.add(rawData.get(i));
             }
-            return  rawDatas;
+            return tempRawData;
         }
-        else{
-            return rawData;
-        }
+        else {return rawData;}
     }
 
     /**
@@ -84,7 +81,6 @@ public class TDMSChannel {
         }
     }
 
-
     /**
      * Returns a string representation of the TDMSChannel object.
      *
@@ -99,5 +95,4 @@ public class TDMSChannel {
             super(message);
         }
     }
-
 }

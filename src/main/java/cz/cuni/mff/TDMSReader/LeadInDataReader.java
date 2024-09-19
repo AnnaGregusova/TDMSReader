@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
@@ -17,8 +18,8 @@ public class LeadInDataReader extends DataReader {
     /**
      * Constructs a LeadInDataReader with the given RandomAccessFile and segment offset.
      *
-     * @param file           The RandomAccessFile to read from.
-     * @param segmentOffset  The offset of the segment.
+     * @param file          The RandomAccessFile to read from.
+     * @param segmentOffset The offset of the segment.
      */
     public LeadInDataReader(RandomAccessFile file, long segmentOffset) {
         super(file);

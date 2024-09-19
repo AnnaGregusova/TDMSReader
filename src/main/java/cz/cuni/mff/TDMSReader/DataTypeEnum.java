@@ -1,4 +1,5 @@
 package cz.cuni.mff.TDMSReader;
+
 /**
  * Enum representing different data types with their corresponding values and sizes.
  */
