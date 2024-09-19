@@ -310,7 +310,7 @@ public class MetaDataReader extends DataReader {
             throw new IOException("TDMS library only supports data of dimension 1 and not " + dimension);
         }
         currentOffset += 4;
-        long numberOfRawDataValues = readInt64(currentOffset);
+        long numberOfRawDataValues = readInt32(currentOffset);
         currentOffset += 8;
 
         int numberOfProperties = readInt32(currentOffset);
