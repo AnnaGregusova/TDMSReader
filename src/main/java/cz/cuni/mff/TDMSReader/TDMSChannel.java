@@ -51,7 +51,6 @@ public class TDMSChannel {
     }
     public ArrayList<Object> getRawData(int count){
         ArrayList<Object> rawDatas = new ArrayList<>();
-        //System.out.println("Getting the raww data");
         if (rawData.size() >= count){
             for (int i = 0; i< count; i++){
                 rawDatas.add(rawData.get(i));
