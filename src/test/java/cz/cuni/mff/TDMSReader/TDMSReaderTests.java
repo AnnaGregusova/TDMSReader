@@ -1,4 +1,4 @@
-/*package cz.cuni.mff.TDMSReader;
+package cz.cuni.mff.TDMSReader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,8 +20,8 @@ public class TDMSReaderTests {
     private LeadInDataReader leadInDataReader;
     ExpectedLeadInData.LeadInDataExpectations leadInDataExpectations;
     private Path resourceDirectory = Paths.get("src", "test", "resources", "tdms_files");
-    private String tdmsFilePath = "/Users/annagregusova/TDMSReader/tdms_files/Sample_2021_2496_20210916_123804.tdms";
-    private String jsonFilePath = "/Users/annagregusova/TDMSReader/json_files/Sample_2021_2496_20210916_123804.json";
+    private String tdmsFilePath = "/Users/annagregusova/TDMSReader/tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
+    private String jsonFilePath = "/Users/annagregusova/TDMSReader/json_files/coilResistanceTest_20210819_150423_0001.json";
     private String getPath(String filename) {
         return resourceDirectory.resolve(filename).toString();
     }
@@ -41,7 +41,7 @@ public class TDMSReaderTests {
 
     @BeforeEach
     void setUp() throws IOException {
-	String filePath = tdmsFilePath;
+	String filePath = path2;
         initializeReaderForFile(filePath);
         leadInDataExpectations = ExpectedLeadInData.getExpectations(filePath);
     }
@@ -231,6 +231,7 @@ public class TDMSReaderTests {
             }
         }
     }
-}*/
+}
+
 
 
