@@ -16,7 +16,7 @@ public enum DataTypeEnum {
     TDS_TYPE_SINGLE_FLOAT(9, 4),
     TDS_TYPE_DOUBLE_FLOAT(10, 8),
     TDS_TYPE_EXTENDED_FLOAT(11, 8),
-    TDS_TYPE_SINGLE_FLOAT_WITH_UNIT(18, 9),    // 0x19 in decimal
+    TDS_TYPE_SINGLE_FLOAT_WITH_UNIT(18, 12),    // 0x19 in decimal //nebo 9?
     TDS_TYPE_DOUBLE_FLOAT_WITH_UNIT(26, 8),    // 0x1A in decimal
     TDS_TYPE_EXTENDED_FLOAT_WITH_UNIT(27, 8), // 0x1B in decimal
     TDS_TYPE_STRING(32, 4),                   // 0x20 in decimal
@@ -26,7 +26,6 @@ public enum DataTypeEnum {
     TDS_TYPE_COMPLEX_SINGLE_FLOAT(0x08000C, 8),
     TDS_TYPE_COMPLEX_DOUBLE_FLOAT(0x10000D, 16),
     TDS_TYPE_DAQMX_RAW_DATA(0xFFFFFFFF, 4);
-
     private final int value;
     private final int size;
 

@@ -30,10 +30,15 @@ public class LeadInDataReader extends DataReader {
      * Checks if the tag read from the file is valid.
      *
      * @return true if the tag is valid, otherwise false.
+     * @throws FileFormatException If the tag is not what is expected.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public boolean isValidTag() throws IOException {
-        return getTag().equals(expectedTag);
+    public boolean isValidTag() throws IOException, FileFormatException {
+        String tag = getTag();
+        if (!tag.equals(expectedTag)) {
+            throw new FileFormatException("Invalid file tag: expected " + expectedTag + ", but found " + tag);
+        }
+        return true;
     }
 
     /**
@@ -50,10 +55,15 @@ public class LeadInDataReader extends DataReader {
      * Gets the offset of the next segment.
      *
      * @return The offset of the next segment.
+     * @throws DataReadException If there is an error reading the next segment offset.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public long getNextSegment() throws IOException {
-        return readInt64(nextSegmentOffset);
+    public long getNextSegment() throws IOException, DataReadException {
+        try {
+            return readInt64(nextSegmentOffset);
+        } catch (IOException e) {
+            throw new DataReadException("Failed to read next segment offset: " + e.getMessage());
+        }
     }
 
     /**
@@ -94,5 +104,16 @@ public class LeadInDataReader extends DataReader {
      */
     public LeadInData createLeadInData() throws IOException {
         return new LeadInData(getTag(), getMask(), getVersion(), getNextSegment(), getRawData());
+    }
+    public class FileFormatException extends IOException {
+        public FileFormatException(String message) {
+            super(message);
+        }
+    }
+
+    public class DataReadException extends IOException {
+        public DataReadException(String message) {
+            super(message);
+        }
     }
 }

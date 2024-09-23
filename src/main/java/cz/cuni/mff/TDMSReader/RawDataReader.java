@@ -8,9 +8,7 @@ import java.util.ArrayList;
  * Class for reading raw data from a file.
  */
 public class RawDataReader extends DataReader {
-    DataTypeReader dataTypeReader = new DataTypeReader();
-    int currentOffsetRD;
-    boolean isFirstCall = true;
+    private DataTypeReader dataTypeReader = new DataTypeReader();
     ArrayList<Object> rawData;
 
     /**
@@ -33,6 +31,9 @@ public class RawDataReader extends DataReader {
      */
     public ArrayList<Object> getRawData(DataTypeEnum dataTypeOfRawData, long numberOfRawDataValues, int currentOffset) throws IOException {
         switch (dataTypeOfRawData) {
+            case DS_TYPE_VOID:
+                rawData = readVoid();
+                break;
             case TDS_TYPE_TIMESTAMP:
                 rawData = readTimeStamps(numberOfRawDataValues, currentOffset);
                 break;
@@ -97,7 +98,6 @@ public class RawDataReader extends DataReader {
                 rawData = readTypeDaqmxRawData();
                 break;
             default:
-                // Handle other enum values here
                 break;
         }
         return rawData;
@@ -106,14 +106,14 @@ public class RawDataReader extends DataReader {
     /**
      * Reads timestamps from the file.
      *
-     * @param numberOFRawData The number of raw data values.
+     * @param numberOfRawData The number of raw data values.
      * @param currentOffset   The current offset in the file.
      * @return The list of timestamps.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    private ArrayList<Object> readTimeStamps(long numberOFRawData, int currentOffset) throws IOException {
+    private ArrayList<Object> readTimeStamps(long numberOfRawData, int currentOffset) throws IOException {
         ArrayList<Object> timestamps = new ArrayList<>();
-        for (int i = 0; i < numberOFRawData; i++) {
+        for (int i = 0; i < numberOfRawData; i++) {
             timestamps.add(dataTypeReader.readTimeStamp(currentOffset));
             currentOffset += 16;
         }

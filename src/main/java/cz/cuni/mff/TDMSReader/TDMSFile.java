@@ -12,7 +12,7 @@ public class TDMSFile {
     private static RandomAccessFile file;
     private static ArrayList<TDMSSegment> segments = new ArrayList<TDMSSegment>();
     private static ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
-    private static ArrayList<TDMSProperty> tdmsFileProperties = new ArrayList<>();
+    private static ArrayList<TDMSProperty> TDMSFileProperties = new ArrayList<>();
 
     /**
      * Constructs a TDMSFile object with the provided RandomAccessFile.
@@ -41,6 +41,8 @@ public class TDMSFile {
         } catch (FileNotFoundException e) {
             System.err.println("File not found: " + filePath);
             e.printStackTrace();
+        } catch (MetaDataReader.DataTypeNotFoundException e) {
+            throw new RuntimeException(e);
         } finally {
             if (file != null) {
                 try {
@@ -60,15 +62,13 @@ public class TDMSFile {
      * @param fileSize      The size of the TDMS file.
      * @throws IOException if an I/O error occurs while reading the segments.
      */
-    private void readSegments(long segmentOffset, long fileSize) throws IOException {
+    private void readSegments(long segmentOffset, long fileSize) throws IOException, MetaDataReader.DataTypeNotFoundException {
         int leadInDataSizeInBytes = 28;
         if (segmentOffset + leadInDataSizeInBytes < fileSize) {
             TDMSSegment segment = readSegment(segmentOffset);
             segmentOffset += segment.getLeadInData().getSegmentOffset();
-            if (segment != null) {
-                segments.add(segment);
-                readSegments(segmentOffset, fileSize);
-            }
+            segments.add(segment);
+            readSegments(segmentOffset, fileSize);
         }
     }
 
@@ -79,7 +79,7 @@ public class TDMSFile {
      * @return A TDMSSegment object representing the read segment.
      * @throws IOException if an I/O error occurs while reading the segment.
      */
-    private TDMSSegment readSegment(long segmentOffset) throws IOException {
+    private TDMSSegment readSegment(long segmentOffset) throws IOException, MetaDataReader.DataTypeNotFoundException {
         LeadInDataReader leadInDataReader = new LeadInDataReader(file, segmentOffset);
         int leadInDataByteCount = 28;
         MetaDataReader metaDataReader = new MetaDataReader(file, segmentOffset + leadInDataByteCount);
@@ -102,9 +102,9 @@ public class TDMSFile {
     public ArrayList<TDMSProperty> getProperties() {
         for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
-            tdmsFileProperties = metaData.getTDMSFileProperties();
+            TDMSFileProperties = metaData.getTDMSFileProperties();
         }
-        return tdmsFileProperties;
+        return TDMSFileProperties;
     }
 
     /**

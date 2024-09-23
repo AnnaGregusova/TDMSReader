@@ -9,14 +9,14 @@ import java.util.ArrayList;
  */
 public class MetaDataReader extends DataReader {
     DataTypeReader dataTypeReader = new DataTypeReader();
-    private long metaDataOffset;
     int numberOfObjects = 0;
     private boolean isFirstCallToGetGroups = true;
     private int currentOffset = 28;
     ArrayList<TDMSGroup> groups = new ArrayList<>();
-    ArrayList<TDMSProperty> tdmsFileProperties = new ArrayList<>();
-    boolean FirstCall = true;
+    ArrayList<TDMSProperty> TDMSFileProperties = new ArrayList<>();
+    boolean firstCall = true;
     int intRawDataIndex;
+    private long metaDataOffset;
 
     /**
      * Constructs a MetaDataReader with the given RandomAccessFile and metadata offset.
@@ -69,7 +69,7 @@ public class MetaDataReader extends DataReader {
      * @return The groups from the metadata.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public ArrayList<TDMSGroup> getGroups() throws IOException {
+    public ArrayList<TDMSGroup> getGroups() throws IOException, DataTypeNotFoundException {
         ArrayList<TDMSChannel> channels = new ArrayList<>();
         ArrayList<TDMSProperty> properties = new ArrayList<>();
 
@@ -88,16 +88,14 @@ public class MetaDataReader extends DataReader {
         }
 
         properties = getProperties();
-
         processObjects(channels);
 
         if (name.equals("/")) {
             TDMSGroup tdmsFileGroup = new TDMSGroup(name, properties, channels);
-            tdmsFileProperties = tdmsFileGroup.getProperties();
+            TDMSFileProperties = tdmsFileGroup.getProperties();
         } else {
             groups.add(new TDMSGroup(name, properties, channels));
         }
-
         return groups;
     }
 
@@ -107,7 +105,7 @@ public class MetaDataReader extends DataReader {
      * @param channels The list of TDMS channels.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    private void processObjects(ArrayList<TDMSChannel> channels) throws IOException {
+    private void processObjects(ArrayList<TDMSChannel> channels) throws IOException, DataTypeNotFoundException {
         if (numberOfObjects != 0) {
             if (isGroup(currentOffset)) {
                 getGroups();
@@ -125,17 +123,18 @@ public class MetaDataReader extends DataReader {
      * @return The MetaData object created from the metadata.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public MetaData createMetaData() throws IOException {
-        return new MetaData(getGroups(), getTdmsFileProperties());
+    public MetaData createMetaData() throws IOException, DataTypeNotFoundException {
+        return new MetaData(getGroups(), getTDMSFileProperties());
     }
 
     /**
      * Gets the TDMS file information properties.
      *
      * @return The list of TDMS file information properties.
+     *
      */
-    private ArrayList<TDMSProperty> getTdmsFileProperties() {
-        return tdmsFileProperties;
+    private ArrayList<TDMSProperty> getTDMSFileProperties() {
+        return TDMSFileProperties;
     }
 
     /**
@@ -180,8 +179,11 @@ public class MetaDataReader extends DataReader {
      * @return The properties from the metadata.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public ArrayList<TDMSProperty> getProperties() throws IOException {
+    public ArrayList<TDMSProperty> getProperties() throws IOException, DataTypeNotFoundException {
         int numberOfProperties = getNumberOfProperties();
+        if (numberOfProperties < 0) {
+            throw new WrongNumberOfProperties("Number of properties can not be negative." + numberOfProperties);
+        }
         ArrayList<TDMSProperty> properties = new ArrayList<TDMSProperty>();
 
         for (int i = 0; i < numberOfProperties; i++) {
@@ -194,8 +196,7 @@ public class MetaDataReader extends DataReader {
             Object propertyValue;
 
             switch (propertyDataType) {
-                case TDS_TYPE_I16:
-                case TDS_TYPE_I64:
+                case TDS_TYPE_I8:
                 case TDS_TYPE_U8:
                 case TDS_TYPE_U16:
                 case TDS_TYPE_U32:
@@ -204,30 +205,33 @@ public class MetaDataReader extends DataReader {
                 case TDS_TYPE_EXTENDED_FLOAT:
                 case TDS_TYPE_BOOLEAN:
                 case TDS_TYPE_FIXED_POINT:
-                case TDS_TYPE_DOUBLE_FLOAT:
                 case TDS_TYPE_EXTENDED_FLOAT_WITH_UNIT:
                     currentOffset += propertyDataType.getSize();
                     propertyValue = propertyDataType.name();
                     break;
-                case TDS_TYPE_I8:
+                case TDS_TYPE_I16, TDS_TYPE_I32:
                     propertyValue = readInt32(currentOffset);
+                    currentOffset += propertyDataType.getSize();
+                    break;
+                case TDS_TYPE_I64:
+                    propertyValue = readInt64(currentOffset);
+                    currentOffset += propertyDataType.getSize();
+                    break;
+                case TDS_TYPE_DOUBLE_FLOAT:
+                    propertyValue = dataTypeReader.readDoubleFloat(currentOffset);
                     currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_TIMESTAMP:
                     propertyValue = dataTypeReader.readTimeStamp(currentOffset);
                     currentOffset += propertyDataType.getSize();
                     break;
-                case TDS_TYPE_I32:
-                    propertyValue = readInt32(currentOffset);
-                    currentOffset += propertyDataType.getSize();
-                    break;
                 case TDS_TYPE_SINGLE_FLOAT_WITH_UNIT:
-                    currentOffset += 12;
                     propertyValue = propertyDataType.name();
+                    currentOffset += propertyDataType.getSize();
                     break;
                 case TDS_TYPE_STRING:
                     int lengthOfPropertyValue = readInt32(currentOffset);
-                    currentOffset += 4;
+                    currentOffset += propertyDataType.getSize();
                     propertyValue = readString(currentOffset, lengthOfPropertyValue);
                     currentOffset += lengthOfPropertyValue;
                     break;
@@ -248,15 +252,14 @@ public class MetaDataReader extends DataReader {
      * @return The data type found.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    private DataTypeEnum findDataTypeByValue(int offset) throws IOException {
-        int DataTypeValue = readInt32(offset);
-        //System.out.println("Current offset for data tupes: " + offset);
+    private DataTypeEnum findDataTypeByValue(int offset) throws IOException, DataTypeNotFoundException {
+        int dataTypeValue = readInt32(offset);
         for (DataTypeEnum type : DataTypeEnum.values()) {
-            if (type.getValue() == DataTypeValue) {
+            if (type.getValue() == dataTypeValue) {
                 return type;
             }
         }
-        return DataTypeEnum.DS_TYPE_VOID;
+        throw new DataTypeNotFoundException("Data type with value " + dataTypeValue + " not found.");
     }
 
     /**
@@ -279,7 +282,7 @@ public class MetaDataReader extends DataReader {
      * @return The TDMS channel.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public TDMSChannel getChannel() throws IOException {
+    public TDMSChannel getChannel() throws IOException, DataTypeNotFoundException {
         numberOfObjects--;
 
         ArrayList<TDMSProperty> properties;
@@ -314,13 +317,13 @@ public class MetaDataReader extends DataReader {
             currentOffset += 4;
         }
 
-        if (FirstCall) {
+        if (firstCall) {
             long rawDataOffset = LeadInData.rawDataOffset + 28;
             intRawDataIndex = (int) rawDataOffset;
             rawData = rawDataReader.getRawData(dataTypeOfRawData, numberOfRawDataValues, intRawDataIndex);
             long rawDataIndex = numberOfRawDataValues * sizeTypeOfRawData;
             intRawDataIndex += (int) rawDataIndex;
-            FirstCall = false;
+            firstCall = false;
         } else {
             rawData = rawDataReader.getRawData(dataTypeOfRawData, numberOfRawDataValues, intRawDataIndex);
             intRawDataIndex += (int) (numberOfRawDataValues * sizeTypeOfRawData);
@@ -329,4 +332,15 @@ public class MetaDataReader extends DataReader {
         TDMSChannel tdmsChannel = new TDMSChannel(channelName, properties, rawData);
         return tdmsChannel;
     }
+    private class WrongNumberOfProperties extends IOException {
+        public WrongNumberOfProperties(String message) {
+            super(message);
+        }
+    }
+    public class DataTypeNotFoundException extends Exception {
+        public DataTypeNotFoundException(String message) {
+            super(message);
+        }
+    }
+
 }

@@ -33,15 +33,12 @@ public class DataReader {
      * @return The integer read from the file.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public int readInt32(int offset) throws IOException {
+    public int readInt32(int offset) throws IOException, InvalidOffsetException {
+        checkOffset(offset);
         file.seek(offset);
-
         byte[] bytes = new byte[Integer.BYTES];
         file.read(bytes);
-
-        ByteBuffer buffer = ByteBuffer.wrap(bytes);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-
+        ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
         return buffer.getInt();
     }
 
@@ -52,15 +49,12 @@ public class DataReader {
      * @return The long integer read from the file.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public long readInt64(int offset) throws IOException {
+    public long readInt64(int offset) throws IOException, InvalidOffsetException {
+        checkOffset(offset);
         file.seek(offset);
-
         byte[] bytes = new byte[Long.BYTES];
         file.read(bytes);
-
-        ByteBuffer buffer = ByteBuffer.wrap(bytes);
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
-
+        ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
         return buffer.getLong();
     }
 
@@ -71,7 +65,8 @@ public class DataReader {
      * @return The character read from the file.
      * @throws IOException If an I/O error occurs while reading the file.
      */
-    public char readChar(int offset) throws IOException {
+    public char readChar(int offset) throws IOException, InvalidOffsetException {
+        checkOffset(offset);
         file.seek(offset);
         return file.readChar();
     }
@@ -85,6 +80,7 @@ public class DataReader {
      * @throws IOException If an I/O error occurs while reading the file.
      */
     public String readString(long offset, int length) throws IOException {
+        checkOffset(offset);
         channel = file.getChannel();
         ByteBuffer buffer = ByteBuffer.allocate(length);
         channel.position(offset);
@@ -102,6 +98,7 @@ public class DataReader {
      * @throws IOException If an I/O error occurs while reading the file.
      */
     public byte[] readBytes(int offset, int length) throws IOException {
+        checkOffset(offset);
         channel = file.getChannel();
         ByteBuffer buffer = ByteBuffer.allocate(length);
         channel.position(offset);
@@ -110,17 +107,13 @@ public class DataReader {
 
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
-        //printBytes(bytes);
 
         ArrayList<Byte> byteArrayList = new ArrayList<>();
         while (buffer.hasRemaining()) {
-
             byteArrayList.add(buffer.get());
             byte b = buffer.get();
             String hex = String.format("%02X", b); // Hexadecimal
             int decimal = b & 0xFF; // Decimal
-            //System.out.println(hex);
-            //System.out.println("Hex: " + hex + ", Decimal: " + decimal);
         }
         return bytes;
     }
@@ -249,6 +242,16 @@ public class DataReader {
          */
         public boolean hasNewObjectList() {
             return (mask & newObjectMask) > 0;
+        }
+    }
+    private void checkOffset(long offset){
+        if (offset < 0){
+            throw  new InvalidOffsetException("Offset can not be a negative number." + offset);
+        }
+    }
+    private class InvalidOffsetException extends IllegalArgumentException {
+        public InvalidOffsetException(String message) {
+            super(message);
         }
     }
 }
