@@ -4,19 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * This class represents the main entry point of the application which reads
- * TDMS files based on user input and displays relevant data from these files.
- */
 public class Main {
 
-    /**
-     * The main method which serves as the entry point for the program.
-     * It handles user input to select different paths for reading TDMS files,
-     * and provides options to exit the program.
-     *
-     * @param args Command line arguments (not used).
-     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose which path do you want to read: " + "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
@@ -75,12 +64,6 @@ public class Main {
         scanner.close();
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path1.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
 
     private static void readPath1() throws IOException {
         String path = "tdms_files/Sample_2021_2496_20210916_123804.tdms";
@@ -108,12 +91,6 @@ public class Main {
         System.out.println("Choose which path do you want to read: " + "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path2.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath2() throws IOException {
 
         String path = "tdms_files/coilResistanceTest_20210819_150423_0001.tdms";
@@ -143,12 +120,6 @@ public class Main {
 
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path3.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath3() throws IOException {
         String path = "tdms_files/Test_OK_Sample_20210916_125133 (1).tdms";
         TDMSFile tdmsFile = TDMSFile.read(path);
@@ -176,12 +147,6 @@ public class Main {
 
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path4.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath4() throws IOException {
 
         String path = "tdms_files/sent_test_20200826_135215_0001.tdms";
@@ -209,12 +174,6 @@ public class Main {
         System.out.println("Choose which path do you want to read: " + "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path5.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath5() throws IOException {
         String path = "tdms_files/NH3_concentration_1a_0002.tdms";
         TDMSFile tdmsFile = TDMSFile.read(path);
@@ -241,12 +200,6 @@ public class Main {
         System.out.println("Choose which path do you want to read: " + "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path6.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath6() throws IOException {
 
         String path = "tdms_files/test_TDMS_20240404_103108_0009.tdms";
@@ -274,12 +227,6 @@ public class Main {
         System.out.println("Choose which path do you want to read: " + "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path7.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath7() throws IOException {
         String path = "tdms_files/09_Point_T60C_V16000mV_20240315_102139.tdms";
 
@@ -308,24 +255,12 @@ public class Main {
         System.out.println("Choose which path do you want to read: " + "path1, path2, path3, path4, path5, path6, path7, path8, path9, path10, path11, path12. Type 'exit' to quit.");
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path8.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath8() throws IOException {
         String path = "Wrong_path";
         TDMSFile tdmsFile = TDMSFile.read(path);
 
     }
 
-    /**
-     * Reads and processes the TDMS file specified in the path9.
-     * It displays the file, its properties, groups, and channel data.
-     *
-     * @throws IOException If there is an issue reading the TDMS file.
-     */
     private static void readPath9() throws IOException {
 
         String path = "tdms_files/H2_test_20240229_113102_0001 (1).tdms";

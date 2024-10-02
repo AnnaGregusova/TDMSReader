@@ -5,32 +5,16 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-/**
- * Represents a TDMS (Technical Data Management Streaming) file and provides methods to read its contents.
- */
 public class TDMSFile {
     private static RandomAccessFile file;
     private static ArrayList<TDMSSegment> segments = new ArrayList<TDMSSegment>();
     private static ArrayList<TDMSGroup> groups = new ArrayList<TDMSGroup>();
     private static ArrayList<TDMSProperty> TDMSFileProperties = new ArrayList<>();
 
-    /**
-     * Constructs a TDMSFile object with the provided RandomAccessFile.
-     *
-     * @param file The RandomAccessFile representing the TDMS file.
-     * @throws FileNotFoundException if the file cannot be found.
-     */
     private TDMSFile(RandomAccessFile file) throws FileNotFoundException {
         this.file = file;
     }
 
-    /**
-     * Reads a TDMS file from the specified file path.
-     *
-     * @param filePath The path to the TDMS file.
-     * @return A TDMSFile object representing the read file.
-     * @throws IOException if an I/O error occurs while reading the file.
-     */
     public static TDMSFile read(String filePath) throws IOException {
         try {
             int segmentOffset = 0;
@@ -55,13 +39,6 @@ public class TDMSFile {
         return new TDMSFile(file);
     }
 
-    /**
-     * Reads segments from the TDMS file recursively.
-     *
-     * @param segmentOffset The offset of the segment in the file.
-     * @param fileSize      The size of the TDMS file.
-     * @throws IOException if an I/O error occurs while reading the segments.
-     */
     private void readSegments(long segmentOffset, long fileSize) throws IOException, MetaDataReader.DataTypeNotFoundException {
         int leadInDataSizeInBytes = 28;
         if (segmentOffset + leadInDataSizeInBytes < fileSize) {
@@ -72,13 +49,6 @@ public class TDMSFile {
         }
     }
 
-    /**
-     * Reads a segment from the TDMS file.
-     *
-     * @param segmentOffset The offset of the segment in the file.
-     * @return A TDMSSegment object representing the read segment.
-     * @throws IOException if an I/O error occurs while reading the segment.
-     */
     private TDMSSegment readSegment(long segmentOffset) throws IOException, MetaDataReader.DataTypeNotFoundException {
         LeadInDataReader leadInDataReader = new LeadInDataReader(file, segmentOffset);
         int leadInDataByteCount = 28;
@@ -94,11 +64,6 @@ public class TDMSFile {
         }
     }
 
-    /**
-     * Retrieves the properties of the TDMS file.
-     *
-     * @return An ArrayList of TDMSProperty objects representing the properties of the file.
-     */
     public ArrayList<TDMSProperty> getProperties() {
         for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
@@ -107,12 +72,6 @@ public class TDMSFile {
         return TDMSFileProperties;
     }
 
-    /**
-     * Retrieves a group from the TDMS file by its name.
-     *
-     * @param name The name of the group to retrieve.
-     * @return The TDMSGroup object representing the retrieved group, or null if not found.
-     */
     public TDMSGroup getGroup(String name) {
         try {
             for (TDMSSegment segment : segments) {
@@ -133,11 +92,6 @@ public class TDMSFile {
         }
     }
 
-    /**
-     * Retrieves all groups from the TDMS file.
-     *
-     * @return An ArrayList of TDMSGroup objects representing all groups in the file.
-     */
     public ArrayList<TDMSGroup> getGroups() {
         for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
@@ -146,9 +100,6 @@ public class TDMSFile {
         return groups;
     }
 
-    /**
-     * Prints the metadata of the TDMS file segments.
-     */
     public void printMetaData() {
         for (TDMSSegment segment : segments) {
             MetaData metaData = segment.getMetaData();
@@ -157,9 +108,6 @@ public class TDMSFile {
         }
     }
 
-    /**
-     * Prints the lead-in data of the TDMS file segments.
-     */
     public void printLeadInData() {
         for (TDMSSegment segment : segments) {
             LeadInData leadInData = segment.getLeadInData();

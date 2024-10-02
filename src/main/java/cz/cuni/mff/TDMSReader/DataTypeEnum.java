@@ -1,8 +1,5 @@
 package cz.cuni.mff.TDMSReader;
 
-/**
- * Enum representing different data types with their corresponding values and sizes.
- */
 public enum DataTypeEnum {
     DS_TYPE_VOID(0, 4),
     TDS_TYPE_I8(1, 0),
@@ -29,31 +26,15 @@ public enum DataTypeEnum {
     private final int value;
     private final int size;
 
-    /**
-     * Constructs a DataTypeEnum with the given value and size.
-     *
-     * @param value The value representing the data type.
-     * @param size  The size of the data type in bytes.
-     */
     DataTypeEnum(int value, int size) {
         this.value = value;
         this.size = size;
     }
 
-    /**
-     * Returns the value representing the data type.
-     *
-     * @return The value of the data type.
-     */
     public int getValue() {
         return this.value;
     }
 
-    /**
-     * Returns the size of the data type in bytes.
-     *
-     * @return The size of the data type.
-     */
     public int getSize() {
         return this.size;
     }

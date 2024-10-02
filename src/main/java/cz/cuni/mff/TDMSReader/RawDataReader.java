@@ -4,31 +4,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-/**
- * Class for reading raw data from a file.
- */
 public class RawDataReader extends DataReader {
     private DataTypeReader dataTypeReader = new DataTypeReader();
     ArrayList<Object> rawData;
 
-    /**
-     * Constructor for RawDataReader.
-     *
-     * @param file The RandomAccessFile to read from.
-     */
     public RawDataReader(RandomAccessFile file) {
         super(file);
     }
 
-    /**
-     * Gets the raw data based on the data type.
-     *
-     * @param dataTypeOfRawData     The data type of the raw data.
-     * @param numberOfRawDataValues The number of raw data values.
-     * @param currentOffset         The current offset in the file.
-     * @return The raw data.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public ArrayList<Object> getRawData(DataTypeEnum dataTypeOfRawData, long numberOfRawDataValues, int currentOffset) throws IOException {
         switch (dataTypeOfRawData) {
             case DS_TYPE_VOID:
@@ -103,14 +86,6 @@ public class RawDataReader extends DataReader {
         return rawData;
     }
 
-    /**
-     * Reads timestamps from the file.
-     *
-     * @param numberOfRawData The number of raw data values.
-     * @param currentOffset   The current offset in the file.
-     * @return The list of timestamps.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     private ArrayList<Object> readTimeStamps(long numberOfRawData, int currentOffset) throws IOException {
         ArrayList<Object> timestamps = new ArrayList<>();
         for (int i = 0; i < numberOfRawData; i++) {

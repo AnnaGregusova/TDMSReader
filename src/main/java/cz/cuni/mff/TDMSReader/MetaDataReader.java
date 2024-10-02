@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
-/**
- * Class for reading metadata from a file.
- */
 public class MetaDataReader extends DataReader {
     DataTypeReader dataTypeReader = new DataTypeReader();
     int numberOfObjects = 0;
@@ -18,57 +15,26 @@ public class MetaDataReader extends DataReader {
     int intRawDataIndex;
     private long metaDataOffset;
 
-    /**
-     * Constructs a MetaDataReader with the given RandomAccessFile and metadata offset.
-     *
-     * @param file           The RandomAccessFile to read from.
-     * @param metaDataOffset The offset of the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public MetaDataReader(RandomAccessFile file, long metaDataOffset) throws IOException {
         super(file);
         this.metaDataOffset = metaDataOffset;
     }
 
-    /**
-     * Checks if the metadata has objects.
-     *
-     * @return true if the metadata has objects, otherwise false.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public boolean hasObjects() throws IOException {
         return getNumberOfObjects() != 0;
     }
 
-    /**
-     * Gets the name of the group.
-     *
-     * @return The name of the group.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public String getName() throws IOException {
         int groupNameOffset = 36;
         return readString(groupNameOffset, getLengthOfObject() / 2);
     }
 
-    /**
-     * Gets the number of objects in the metadata.
-     *
-     * @return The number of objects in the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public int getNumberOfObjects() throws IOException {
         int numberOfObjects = readInt32(currentOffset);
         currentOffset += 4;
         return numberOfObjects;
     }
 
-    /**
-     * Gets the groups from the metadata.
-     *
-     * @return The groups from the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public ArrayList<TDMSGroup> getGroups() throws IOException, DataTypeNotFoundException {
         ArrayList<TDMSChannel> channels = new ArrayList<>();
         ArrayList<TDMSProperty> properties = new ArrayList<>();
@@ -99,12 +65,6 @@ public class MetaDataReader extends DataReader {
         return groups;
     }
 
-    /**
-     * Processes objects in the metadata.
-     *
-     * @param channels The list of TDMS channels.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     private void processObjects(ArrayList<TDMSChannel> channels) throws IOException, DataTypeNotFoundException {
         if (numberOfObjects != 0) {
             if (isGroup(currentOffset)) {
@@ -117,68 +77,32 @@ public class MetaDataReader extends DataReader {
         }
     }
 
-    /**
-     * Creates a MetaData object from the metadata.
-     *
-     * @return The MetaData object created from the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public MetaData createMetaData() throws IOException, DataTypeNotFoundException {
         return new MetaData(getGroups(), getTDMSFileProperties());
     }
 
-    /**
-     * Gets the TDMS file information properties.
-     *
-     * @return The list of TDMS file information properties.
-     *
-     */
     private ArrayList<TDMSProperty> getTDMSFileProperties() {
         return TDMSFileProperties;
     }
 
-    /**
-     * Gets the length of the object.
-     *
-     * @return The length of the object.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public int getLengthOfObject() throws IOException {
         int lengthOfObjectPath = readInt32(currentOffset);
         currentOffset += 4;
         return lengthOfObjectPath;
     }
 
-    /**
-     * Gets the number of properties in the metadata.
-     *
-     * @return The number of properties in the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public int getNumberOfProperties() throws IOException {
         int numberOfProperties = readInt32(currentOffset);
         currentOffset += 4;
         return numberOfProperties;
     }
 
-    /**
-     * Checks if the metadata has raw data.
-     *
-     * @return The indicator for raw data in the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public int hasRawData() throws IOException {
         int hasRawData = readInt32(currentOffset);
         currentOffset += 4;
         return hasRawData;
     }
 
-    /**
-     * Gets the properties from the metadata.
-     *
-     * @return The properties from the metadata.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public ArrayList<TDMSProperty> getProperties() throws IOException, DataTypeNotFoundException {
         int numberOfProperties = getNumberOfProperties();
         if (numberOfProperties < 0) {
@@ -245,13 +169,6 @@ public class MetaDataReader extends DataReader {
         return properties;
     }
 
-    /**
-     * Finds the data type by value.
-     *
-     * @param offset The offset in the file.
-     * @return The data type found.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     private DataTypeEnum findDataTypeByValue(int offset) throws IOException, DataTypeNotFoundException {
         int dataTypeValue = readInt32(offset);
         for (DataTypeEnum type : DataTypeEnum.values()) {
@@ -262,13 +179,6 @@ public class MetaDataReader extends DataReader {
         throw new DataTypeNotFoundException("Data type with value " + dataTypeValue + " not found.");
     }
 
-    /**
-     * Checks if the object at the given offset is a group.
-     *
-     * @param currentOffset The current offset.
-     * @return true if the object is a group, otherwise false.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     private boolean isGroup(int currentOffset) throws IOException {
         int nextObjectPathLength = readInt32(currentOffset);
         String nextObjectName = readString(currentOffset + 4, nextObjectPathLength);
@@ -276,12 +186,6 @@ public class MetaDataReader extends DataReader {
         return slashCount < 2;
     }
 
-    /**
-     * Gets the TDMS channel from the metadata.
-     *
-     * @return The TDMS channel.
-     * @throws IOException If an I/O error occurs while reading the file.
-     */
     public TDMSChannel getChannel() throws IOException, DataTypeNotFoundException {
         numberOfObjects--;
 
